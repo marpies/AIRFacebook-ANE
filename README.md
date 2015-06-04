@@ -15,7 +15,7 @@ See [guide PDF](http://nativeextensions.marpies.com/facebook/guide.pdf).
 Running the demo application
 ----------------------------
 
-After obtaining a Facebook app ID and adding the ANE to your project, enter your Facebook app ID in the [LoginScreen](#) class. Next, open `assets/Main-app.xml` file and replace `{FACEBOOK_APP_ID}` and `{FACEBOOK_DISPLAY_NAME}` with the values from your Facebook developer profile. Compile and run as usually.
+After obtaining a Facebook app ID and adding the ANE to your project, enter your Facebook app ID in the [LoginScreen](https://github.com/marpies/AIRFacebook-ANE/blob/master/src/com/marpies/demo/facebook/screens/LoginScreen.as#L42) class. Next, open `assets/Main-app.xml` file and replace `{FACEBOOK_APP_ID}` and `{FACEBOOK_DISPLAY_NAME}` with the values from your Facebook developer profile. Compile and run as usually.
 
 Documentation
 -------------
