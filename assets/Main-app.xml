@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Adobe AIR Application Descriptor File Template.
+     Specifies parameters for identifying, installing, and launching AIR applications.
+
+     xmlns - The Adobe AIR namespace: http://ns.adobe.com/air/application/15.0.
+     The last segment of the namespace specifies the version of the AIR runtime required for this application to run.
+
+     minimumPatchLevel - The minimum patch level of the AIR runtime required to run the application. Optional. -->
+
+<application xmlns="http://ns.adobe.com/air/application/15.0">
+
+    <!-- A universally unique application identifier. Must be unique across all AIR applications.
+         Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
+    <id>com.marpies.demo.facebook</id>
+
+    <!-- Used as the filename for the application. Required. -->
+    <filename>AIRFacebook Demo</filename>
+
+    <!-- The name that is displayed in the AIR application installer. May have multiple values for each language. See samples or xsd schema file. Optional. -->
+    <name>AIRFacebook Demo</name>
+
+    <!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade.
+         Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
+         An updated version of application must have a versionNumber value higher than the previous version. Required for namespace >= 2.5. -->
+    <versionNumber>0.0.1</versionNumber>
+
+    <!-- Identifies the ActionScript extensions used by an application. -->
+    <extensions>
+        <extensionID>com.marpies.ane.facebook</extensionID>
+    </extensions>
+
+    <!-- Settings for the application's initial window. Required. -->
+    <initialWindow>
+        <!-- The main SWF or HTML file of the application. Required. -->
+        <!-- <content>SWF file name is set automatically at compile time</content> -->
+        <content>Main.swf</content>
+
+        <!-- Whether the window is initially visible. Optional. Default false. -->
+        <visible>true</visible>
+
+        <!-- The aspect ratio of the app ("portrait" or "landscape" or "any"). Optional. Mobile only. Default is the natural orientation of the device -->
+        <aspectRatio>landscape</aspectRatio>
+
+        <!-- Whether the app will begin auto-orienting on launch. Optional. Mobile only. Default false -->
+        <autoOrients>true</autoOrients>
+
+        <!-- Whether the app launches in full screen. Optional. Mobile only. Default false -->
+        <fullScreen>false</fullScreen>
+
+        <!-- The render mode for the app (either auto, cpu, gpu, or direct). Optional. Default auto -->
+        <renderMode>direct</renderMode>
+    </initialWindow>
+
+    <!-- iOS specific capabilities -->
+    <iPhone>
+        <!-- A list of plist key/value pairs to be added to the application Info.plist -->
+        <InfoAdditions>
+            <![CDATA[
+            <key>UIDeviceFamily</key>
+            <array>
+                <!-- iPhone and iPod touch devices -->
+                <string>1</string>
+                <!-- iPad devices -->
+                <string>2</string>
+            </array>
+
+            <key>CFBundleURLTypes</key>
+            <array>
+                <dict>
+                    <key>CFBundleURLSchemes</key>
+                        <array>
+                            <string>fb{FACEBOOK_APP_ID}</string>
+                        </array>
+                </dict>
+            </array>
+            <key>FacebookAppID</key>
+            <string>{FACEBOOK_APP_ID}</string>
+            <key>FacebookDisplayName</key>
+            <string>{FACEBOOK_DISPLAY_NAME}</string>
+
+            <!--<key>UIStatusBarStyle</key>-->
+            <!--<string>UIStatusBarStyleBlackOpaque</string>-->
+            <!--<key>UIRequiresPersistentWiFi</key>-->
+            <!--<string>YES</string>-->
+            ]]>
+        </InfoAdditions>
+
+        <!-- A list of plist key/value pairs to be added to the application Entitlements.plist -->
+        <!--<Entitlements>
+            <![CDATA[
+            <key>keychain-access-groups</key>
+            <array>
+                <string></string>
+                <string></string>
+            </array>
+            ]]>
+        </Entitlements>-->
+
+        <!-- Display Resolution for the app (either "standard" or "high"). Optional. Default "standard" -->
+        <requestedDisplayResolution>high</requestedDisplayResolution>
+        <!-- Forcing Render Mode CPU for the devices mentioned. Optional  -->
+        <!--<forceCPURenderModeForDevices></forceCPURenderModeForDevices> -->
+        <!-- File containing line separated list of external swf paths. These swfs won't be packaged inside the application
+        and corresponding stripped swfs will be output in externalStrippedSwfs folder. -->
+        <!--<externalSwfs></externalSwfs> -->
+    </iPhone>
+
+    <!-- Android specific tags that get passed to AndroidManifest.xml file. -->
+    <android>
+        <manifestAdditions>
+            <![CDATA[
+            <manifest android:installLocation="auto">
+                <uses-permission android:name="android.permission.INTERNET"/>
+
+                <application>
+                    <activity
+                        android:name="com.facebook.FacebookActivity"
+                        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+                        android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                    />
+                    
+                    <provider
+                        android:authorities="com.facebook.app.FacebookContentProvider{FACEBOOK_APP_ID}"
+                        android:name="com.facebook.FacebookContentProvider"
+                        android:exported="true"
+                    />
+
+                    <activity 
+                        android:name="com.marpies.ane.facebook.LoginActivity"
+                        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+                        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+                    />
+
+                    <activity 
+                        android:name="com.marpies.ane.facebook.ShareActivity"
+                        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+                        android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+                    />
+                </application>
+
+            </manifest>
+            ]]>
+        </manifestAdditions>
+
+        <!-- Color depth for the app (either "32bit" or "16bit"). Optional. Default 16bit before namespace 3.0, 32bit after -->
+        <!--<colorDepth></colorDepth>-->
+        <!-- Indicates if the app contains video or not. Necessary for ordering of video planes with graphics plane, especially in Jellybean - if you app does video this must be set to true - valid values are true or false -->
+        <!-- <containsVideo></containsVideo> -->
+    </android>
+
+</application>
