@@ -245,8 +245,14 @@ package com.marpies.demo.facebook.screens {
         }
 
         private function printExtendedProfile( userProfile:ExtendedUserProfile ):void {
-            for( var key:String in userProfile ) {
-                Logger.log( "\t" + key + " -> " + userProfile.getProperty( key ) );
+            const props:Vector.<String> = new <String>[ "name", "birthday", "link", "picture" ];
+            for each( var prop:String in props ) {
+                const propVal:Object = userProfile.getProperty( prop );
+                if( propVal ) {
+                    Logger.log( "\t" + prop + " -> " + propVal );
+                } else {
+                    Logger.log( "\tProfile does not have property '" + prop + "' available" );
+                }
             }
         }
 

@@ -103,7 +103,6 @@ package {
                 /* Drawers */
                 mDrawers = new Drawers( mScreenNavigator );
                 mDrawers.leftDrawer = mMenu;
-                mDrawers.clipDrawers = false;
                 mDrawers.leftDrawerToggleEventType = ScreenEvent.TOGGLE_MENU;
                 addChild( mDrawers );
             } else {

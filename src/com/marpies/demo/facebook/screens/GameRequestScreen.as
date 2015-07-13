@@ -2,6 +2,7 @@ package com.marpies.demo.facebook.screens {
 
     import com.marpies.ane.facebook.AIRFacebook;
     import com.marpies.ane.facebook.data.AIRFacebookGameRequest;
+    import com.marpies.ane.facebook.data.AIRFacebookGameRequestFilter;
     import com.marpies.ane.facebook.data.AIRFacebookGameRequestType;
     import com.marpies.ane.facebook.events.AIRFacebookGameRequestEvent;
     import com.marpies.ane.facebook.events.AIRFacebookOpenGraphEvent;
@@ -26,6 +27,8 @@ package com.marpies.demo.facebook.screens {
 
         private var mRequestTypeLabel:Label;
         private var mRequestTypeDropdown:PickerList;
+        private var mFilterTypeLabel:Label;
+        private var mFilterTypeDropdown:PickerList;
         private var mMessageLabel:Label;
         private var mMessageInput:TextInput;
         private var mTitleLabel:Label;
@@ -86,6 +89,26 @@ package com.marpies.demo.facebook.screens {
             mRequestTypeDropdown.addEventListener( Event.CHANGE, onRequestTypeChanged );
             column1.addChild( mRequestTypeDropdown );
 
+            /* Filter type */
+                /* Label */
+            mFilterTypeLabel = new Label();
+            mFilterTypeLabel.text = "Filter type:";
+            column1.addChild( mFilterTypeLabel );
+                /* Dropdown */
+            mFilterTypeDropdown = new PickerList();
+            mFilterTypeDropdown.dataProvider = new ListCollection(
+                    [
+                        { text: "None" },
+                        { text: AIRFacebookGameRequestFilter.APP_USERS },
+                        { text: AIRFacebookGameRequestFilter.APP_NON_USERS }
+                    ]
+            );
+            mFilterTypeDropdown.typicalItem = "APPNONUSERS";
+            mFilterTypeDropdown.labelField = "text";
+            mFilterTypeDropdown.listProperties.@itemRendererProperties.labelField = "text";
+            mFilterTypeDropdown.addEventListener( Event.CHANGE, onRequestTypeChanged );
+            column1.addChild( mFilterTypeDropdown );
+
             /* Message */
                 /* Label */
             mMessageLabel = new Label();
@@ -116,7 +139,7 @@ package com.marpies.demo.facebook.screens {
                 /* Input */
             mObjectIDInput = new TextInput();
             mObjectIDInput.width = Constants.stageWidth >> 2;
-            mObjectIDInput.text = "";    //
+            mObjectIDInput.text = "744663038965383";    //
             column1.addChild( mObjectIDInput );
 
             /* Data */
@@ -187,18 +210,20 @@ package com.marpies.demo.facebook.screens {
             const requestType:String = mRequestTypeDropdown.selectedItem.text.toLowerCase();
             const data:String = (mDataInput.text != "") ? mDataInput.text : null;
             const friendID:String = (mFriendIDInput.text != "") ? mFriendIDInput.text : null;
+            const filter:String = (mFilterTypeDropdown.selectedIndex == 0) ? null : mFilterTypeDropdown.selectedItem.text;
+
             switch( requestType ) {
                 case "askfor":
                     Logger.log( "Showing ASK_FOR dialog" );
-                    AIRFacebook.showGameRequestDialog( requestType, mMessageInput.text, mTitleInput.text, mObjectIDInput.text, data, friendID );
+                    AIRFacebook.showGameRequestDialog( requestType, mMessageInput.text, mTitleInput.text, mObjectIDInput.text, filter, data, null, friendID );
                     break;
                 case "send":
                     Logger.log( "Showing SEND dialog" );
-                    AIRFacebook.showGameRequestDialog( requestType, mMessageInput.text, mTitleInput.text, mObjectIDInput.text, data, friendID );
+                    AIRFacebook.showGameRequestDialog( requestType, mMessageInput.text, mTitleInput.text, mObjectIDInput.text, filter, data, null, friendID );
                     break;
                 case "turn":
                     Logger.log( "Showing TURN dialog" );
-                    AIRFacebook.showGameRequestDialog( requestType, mMessageInput.text, mTitleInput.text, null, data, friendID );
+                    AIRFacebook.showGameRequestDialog( requestType, mMessageInput.text, mTitleInput.text, null, filter, data, null, friendID );
                     break;
             }
         }
