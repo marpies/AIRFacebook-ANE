@@ -2,6 +2,7 @@ package com.marpies.demo.facebook.screens {
 
     import com.marpies.ane.facebook.AIRFacebook;
     import com.marpies.ane.facebook.events.AIRFacebookShareEvent;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookAppInviteListener;
     import com.marpies.utils.Constants;
     import com.marpies.utils.Logger;
     import com.marpies.utils.VerticalLayoutBuilder;
@@ -14,7 +15,7 @@ package com.marpies.demo.facebook.screens {
 
     import starling.events.Event;
 
-    public class AppInviteScreen extends BaseScreen {
+    public class AppInviteScreen extends BaseScreen implements IAIRFacebookAppInviteListener {
 
         private var mInviteButton:Button;
         private var mAppLinkLabel:Label;
@@ -76,21 +77,48 @@ package com.marpies.demo.facebook.screens {
          */
 
         private function onInviteButtonTriggered():void {
-            AIRFacebook.addEventListener( AIRFacebookShareEvent.SHARE_RESULT, onInviteDialogResult );
+            /* This screen implements 'IAIRFacebookAppInviteListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookShareEvent.SHARE_RESULT, onInviteDialogResult );
+
             AIRFacebook.showAppInviteDialog(
                     mAppLinkInput.text,
-                    (mImageURLInput.text == "") ? null : mImageURLInput.text
+                    (mImageURLInput.text == "") ? null : mImageURLInput.text,
+                    this
             )
         }
+
+        /**
+         *
+         *
+         * AIRFacebook handlers (methods defined by IAIRFacebookAppInviteListener interface)
+         *
+         *
+         */
+
+        public function onFacebookAppInviteSuccess():void {
+            Logger.log( "App invitation was sent successfully." );
+        }
+
+        public function onFacebookAppInviteCancel():void {
+            Logger.log( "App invitation was cancelled." );
+        }
+
+        public function onFacebookAppInviteError( errorMessage:String ):void {
+            Logger.log( "Invite error: " + errorMessage );
+        }
+
+        /**
+         * Event handlers (just for demonstration purposes)
+         */
 
         private function onInviteDialogResult( event:AIRFacebookShareEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookShareEvent.SHARE_RESULT, onInviteDialogResult );
             if( event.errorMessage ) {
-                Logger.log( "Invite error: " + event.errorMessage );
+                Logger.log( "[EventHandler] Invite error: " + event.errorMessage );
             } else if( event.wasCancelled ) {
-                Logger.log( "App invitation was cancelled." );
+                Logger.log( "[EventHandler] App invitation was cancelled." );
             } else {
-                Logger.log( "App invitation was successful." );
+                Logger.log( "[EventHandler] App invitation was sent successfully." );
             }
         }
 

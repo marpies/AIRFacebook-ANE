@@ -2,6 +2,7 @@ package com.marpies.demo.facebook.screens {
 
     import com.marpies.ane.facebook.AIRFacebook;
     import com.marpies.ane.facebook.events.AIRFacebookShareEvent;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookShareListener;
     import com.marpies.utils.Constants;
     import com.marpies.utils.Logger;
     import com.marpies.utils.VerticalLayoutBuilder;
@@ -15,7 +16,7 @@ package com.marpies.demo.facebook.screens {
     import starling.display.DisplayObject;
     import starling.events.Event;
 
-    public class ShareLinkScreen extends BaseScreen {
+    public class ShareLinkScreen extends BaseScreen implements IAIRFacebookShareListener {
 
         private var mTitleLabel:Label;
         private var mTitleInput:TextInput;
@@ -134,13 +135,16 @@ package com.marpies.demo.facebook.screens {
          */
 
         private function onShareButtonTriggered( event:Event ):void {
-            AIRFacebook.addEventListener( AIRFacebookShareEvent.SHARE_RESULT, onShareResult );
+            /* This screen implements 'IAIRFacebookShareListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookShareEvent.SHARE_RESULT, onShareResult );
+
             if( mUseMessengerCheck.isSelected ) {
                 AIRFacebook.shareLinkMessage(
                         mTitleInput.text,
                         mContentURLInput.text,
                         mDescriptionInput.text,
-                        mImageURLInput.text
+                        mImageURLInput.text,
+                        this
                 );
             } else {
                 AIRFacebook.shareLink(
@@ -149,19 +153,44 @@ package com.marpies.demo.facebook.screens {
                         mDescriptionInput.text,
                         mImageURLInput.text,
                         mShareWithoutUICheck.isSelected,
-                        mWithoutUIMessageInput.text
+                        mWithoutUIMessageInput.text,
+                        this
                 );
             }
         }
 
+        /**
+         *
+         *
+         * AIRFacebook handlers (methods defined by IAIRFacebookShareListener interface)
+         *
+         *
+         */
+
+        public function onFacebookShareSuccess( postID:String ):void {
+            Logger.log( "Share link success, post id: " + postID );
+        }
+
+        public function onFacebookShareCancel():void {
+            Logger.log( "Share link cancelled" );
+        }
+
+        public function onFacebookShareError( errorMessage:String ):void {
+            Logger.log( "Share link error: " + errorMessage );
+        }
+
+        /**
+         * Event handlers (just for demonstration purposes)
+         */
+
         private function onShareResult( event:AIRFacebookShareEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookShareEvent.SHARE_RESULT, onShareResult );
             if( event.errorMessage ) {
-                Logger.log( "Share link error: " + event.errorMessage );
+                Logger.log( "[EventHandler] Share link error: " + event.errorMessage );
             } else if( event.wasCancelled ) {
-                Logger.log( "Share link cancelled" );
+                Logger.log( "[EventHandler] Share link cancelled" );
             } else {
-                Logger.log( "Share link success, post id: " + event.postID );
+                Logger.log( "[EventHandler] Share link success, post id: " + event.postID );
             }
         }
 

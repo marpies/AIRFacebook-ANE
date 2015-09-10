@@ -2,15 +2,14 @@ package com.marpies.demo.facebook.screens {
 
     import com.marpies.ane.facebook.AIRFacebook;
     import com.marpies.ane.facebook.events.AIRFacebookShareEvent;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookShareListener;
     import com.marpies.utils.Constants;
     import com.marpies.utils.Logger;
     import com.marpies.utils.VerticalLayoutBuilder;
 
     import feathers.controls.Button;
     import feathers.controls.Check;
-    import feathers.controls.Header;
     import feathers.controls.Label;
-    import feathers.controls.PanelScreen;
     import feathers.controls.TextInput;
     import feathers.layout.VerticalLayout;
 
@@ -20,7 +19,7 @@ package com.marpies.demo.facebook.screens {
     import starling.display.Image;
     import starling.events.Event;
 
-    public class ShareOpenGraphStoryScreen extends BaseScreen {
+    public class ShareOpenGraphStoryScreen extends BaseScreen implements IAIRFacebookShareListener {
 
         [Embed(source="/../assets/starling-logo.png")]
         protected static const STARLING_LOGO:Class;
@@ -143,24 +142,51 @@ package com.marpies.demo.facebook.screens {
         }
 
         private function onShareButtonTriggered( event:Event ):void {
-            AIRFacebook.addEventListener( AIRFacebookShareEvent.SHARE_RESULT, onShareResult );
+            /* This screen implements 'IAIRFacebookShareListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookShareEvent.SHARE_RESULT, onShareResult );
+
             AIRFacebook.shareOpenGraphStory(
                     mActionTypeInput.text,
                     mObjectTypeInput.text,
                     mTitleInput.text,
                     mShareBitmapCheck.isSelected ? mStarlingLogoBitmap.bitmapData : mImageURLInput.text,
-                    null // Could be for example { "app_namespace:weapon_rarity": "LEGENDARY" }
+                    null, // Could be for example { "app_namespace:weapon_rarity": "LEGENDARY" },
+                    this
             );
         }
+
+        /**
+         *
+         *
+         * AIRFacebook handlers (methods defined by IAIRFacebookShareListener interface)
+         *
+         *
+         */
+
+        public function onFacebookShareSuccess( postID:String ):void {
+            Logger.log( "Share Open Graph story success, post ID: " + postID );
+        }
+
+        public function onFacebookShareCancel():void {
+            Logger.log( "Share Open Graph story cancelled" );
+        }
+
+        public function onFacebookShareError( errorMessage:String ):void {
+            Logger.log( "Share Open Graph story error: " + errorMessage );
+        }
+
+        /**
+         * Event handlers (just for demonstration purposes)
+         */
 
         private function onShareResult( event:AIRFacebookShareEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookShareEvent.SHARE_RESULT, onShareResult );
             if( event.errorMessage ) {
-                Logger.log( "Share Open Graph story error: " + event.errorMessage );
+                Logger.log( "[EventHandler] Share Open Graph story error: " + event.errorMessage );
             } else if( event.wasCancelled ) {
-                Logger.log( "Share Open Graph story cancelled" );
+                Logger.log( "[EventHandler] Share Open Graph story cancelled" );
             } else {
-                Logger.log( "Share Open Graph story success, post ID: " + event.postID );
+                Logger.log( "[EventHandler] Share Open Graph story success, post ID: " + event.postID );
             }
         }
 

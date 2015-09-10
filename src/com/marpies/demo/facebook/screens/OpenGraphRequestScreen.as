@@ -5,6 +5,9 @@ package com.marpies.demo.facebook.screens {
     import com.marpies.ane.facebook.events.AIRFacebookExtendedUserProfileEvent;
     import com.marpies.ane.facebook.events.AIRFacebookOpenGraphEvent;
     import com.marpies.ane.facebook.events.AIRFacebookUserFriendsEvent;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookExtendedUserProfileListener;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookOpenGraphListener;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookUserFriendsListener;
     import com.marpies.utils.Constants;
     import com.marpies.utils.Logger;
     import com.marpies.utils.VerticalLayoutBuilder;
@@ -19,7 +22,10 @@ package com.marpies.demo.facebook.screens {
     import starling.display.DisplayObject;
     import starling.events.Event;
 
-    public class OpenGraphRequestScreen extends BaseScreen {
+    public class OpenGraphRequestScreen extends BaseScreen implements
+            IAIRFacebookOpenGraphListener,
+            IAIRFacebookExtendedUserProfileListener,
+            IAIRFacebookUserFriendsListener {
 
         private var mMethodLabel:Label;
         private var mMethodDropdown:PickerList;
@@ -31,6 +37,7 @@ package com.marpies.demo.facebook.screens {
         private var mParametersValueInput:TextInput;
         private var mSendButton:Button;
         private var mRequestScoresButton:Button;
+        private var mPostScoreButton:Button;
         private var mExtendedProfileButton:Button;
         private var mFriendListButton:Button;
 
@@ -125,6 +132,13 @@ package com.marpies.demo.facebook.screens {
             mRequestScoresButton.addEventListener( Event.TRIGGERED, onRequestScoreButtonTriggered );
             addChild( mRequestScoresButton );
 
+            /* Post score button */
+            mPostScoreButton = new Button();
+            mPostScoreButton.label = "Post score (random 50-5000)";
+            mPostScoreButton.isEnabled = isUserLoggedIn;
+            mPostScoreButton.addEventListener( Event.TRIGGERED, onPostScoreButtonTriggered );
+            addChild( mPostScoreButton );
+
             /* Send button on the right of the header */
             mSendButton = new Button();
             mSendButton.label = "SEND REQUEST";
@@ -145,7 +159,9 @@ package com.marpies.demo.facebook.screens {
          */
 
         private function onSendButtonTriggered( event:Event ):void {
-            AIRFacebook.addEventListener( AIRFacebookOpenGraphEvent.REQUEST_RESULT, onRequestResult );
+            /* This screen implements 'IAIRFacebookOpenGraphListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookOpenGraphEvent.REQUEST_RESULT, onRequestResult );
+
             const method:String = mMethodDropdown.selectedItem.text;
             var params:Object = null;
             switch( method ) {
@@ -154,7 +170,7 @@ package com.marpies.demo.facebook.screens {
                         params = { };
                         params[mParametersKeyInput.text] = mParametersValueInput.text;
                     }
-                    AIRFacebook.sendOpenGraphGETRequest( mGraphPathInput.text, params );
+                    AIRFacebook.sendOpenGraphGETRequest( mGraphPathInput.text, params, this );
                     break;
                 case "POST":
                     if( mParametersKeyInput.text != "" ) {
@@ -162,87 +178,150 @@ package com.marpies.demo.facebook.screens {
                         params[mParametersKeyInput.text] = mParametersValueInput.text;
                         params["place"] = "110843418940484";    // Seattle
                     }
-                    AIRFacebook.sendOpenGraphPOSTRequest( mGraphPathInput.text, params );
+                    AIRFacebook.sendOpenGraphPOSTRequest( mGraphPathInput.text, params, this );
                     break;
                 case "DELETE":
-                    AIRFacebook.sendOpenGraphDELETERequest( mGraphPathInput.text );
+                    AIRFacebook.sendOpenGraphDELETERequest( mGraphPathInput.text, this );
                     break;
             }
         }
 
         private function onExtendedProfileButtonTriggered():void {
-            AIRFacebook.addEventListener( AIRFacebookExtendedUserProfileEvent.PROFILE_LOADED, onExtendedProfileRequestResult );
+            /* This screen implements 'IAIRFacebookExtendedUserProfileListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookExtendedUserProfileEvent.PROFILE_LOADED, onExtendedProfileRequestResult );
+
             /* Set the user's profile properties you wish to read */
             const params:Vector.<String> = new <String>[ "name", "birthday", "link", "picture.width(200).height(200)" ];
-            const userProfile:ExtendedUserProfile = AIRFacebook.requestExtendedUserProfile( params );   // Add 'true' param to force refresh
+            const userProfile:ExtendedUserProfile = AIRFacebook.requestExtendedUserProfile( params, false, this );   // Add 'true' param to force refresh
             /* If a profile instance is returned then no request will be made */
             if( userProfile != null ) {
-                AIRFacebook.removeEventListener( AIRFacebookExtendedUserProfileEvent.PROFILE_LOADED, onExtendedProfileRequestResult );
+                /* If we added event listener then we should remove it here */
+                //AIRFacebook.removeEventListener( AIRFacebookExtendedUserProfileEvent.PROFILE_LOADED, onExtendedProfileRequestResult );
+
                 Logger.log( "Using cached extended profile" );
                 printExtendedProfile( userProfile );
             }
         }
 
         private function onFriendListButtonTriggered():void {
-            AIRFacebook.addEventListener( AIRFacebookUserFriendsEvent.REQUEST_RESULT, onUserFriendsRequestResult );
+            /* This screen implements 'IAIRFacebookUserFriendsListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookUserFriendsEvent.REQUEST_RESULT, onUserFriendsRequestResult );
+
             /* Set the friends' profile properties you wish to read */
             const params:Vector.<String> = new <String>[ "name", "link" ];
-            AIRFacebook.requestUserFriends( params );
+            AIRFacebook.requestUserFriends( params, this );
         }
 
         private function onRequestScoreButtonTriggered():void {
-            AIRFacebook.addEventListener( AIRFacebookOpenGraphEvent.REQUEST_RESULT, onRequestResult );
-            AIRFacebook.requestScores();
+            /* This screen implements 'IAIRFacebookOpenGraphListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookOpenGraphEvent.REQUEST_RESULT, onRequestResult );
+
+            AIRFacebook.requestScores( this );
+        }
+
+        private function onPostScoreButtonTriggered():void {
+            /* This screen implements 'IAIRFacebookOpenGraphListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookOpenGraphEvent.REQUEST_RESULT, onRequestResult );
+
+            const score:int = int( Math.random() * 4950 + 50 );
+            Logger.log( "Posting score of: " + score );
+            AIRFacebook.postScore( score, this );
         }
 
         /**
          *
          *
-         * Request results
+         * AIRFacebook handlers (methods defined by IAIRFacebook******* interfaces)
          *
          *
+         */
+
+        /**
+         * User friends
+         */
+
+        public function onFacebookUserFriendsSuccess( friends:Vector.<ExtendedUserProfile> ):void {
+            Logger.log( "User friends loaded, printing out friends" );
+            const length:uint = friends.length;
+            for( var i:uint = 0; i < length; i++ ) {
+                printExtendedProfile( friends[i] );
+            }
+        }
+
+        public function onFacebookUserFriendsError( errorMessage:String ):void {
+            Logger.log( "User friends request error: " + errorMessage );
+        }
+
+        /**
+         * Open graph queries
+         */
+
+        public function onFacebookOpenGraphSuccess( jsonResponse:Object, rawResponse:String ):void {
+            Logger.log( "Open Graph request success\n" + "raw response: " + rawResponse );
+
+            Logger.log( "Open Graph request parsed JSON:" );
+            for( var key:String in jsonResponse ) {
+                Logger.log( "\t" + key + "->" + jsonResponse[key] );
+            }
+        }
+
+        public function onFacebookOpenGraphError( errorMessage:String ):void {
+            Logger.log( "Open Graph request error: " + errorMessage );
+        }
+
+        /**
+         * Extended user profile
+         */
+
+        public function onFacebookExtendedUserProfileSuccess( user:ExtendedUserProfile ):void {
+            Logger.log( "Extended user profile loaded, printing" );
+            printExtendedProfile( user );
+        }
+
+        public function onFacebookExtendedUserProfileError( errorMessage:String ):void {
+            Logger.log( "Extended user profile error: " + errorMessage );
+        }
+
+        /**
+         * Event handlers (just for demonstration purposes)
          */
 
         private function onRequestResult( event:AIRFacebookOpenGraphEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookOpenGraphEvent.REQUEST_RESULT, onRequestResult );
             if( event.errorMessage ) {
-                Logger.log( "Open Graph request error: " + event.errorMessage );
+                Logger.log( "[EventHandler] Open Graph request error: " + event.errorMessage );
                 return;
             }
 
-            Logger.log( "Open Graph request success\n" + "raw response: " + event.rawResponse );
-
-            const json:Object = event.jsonResponse;
-            Logger.log( "Open Graph request parsed JSON:" );
-            for( var key:String in json ) {
-                Logger.log( "\t" + key + "->" + json[key] );
-            }
+            Logger.log( "[EventHandler] Open Graph request success" );
         }
 
         private function onExtendedProfileRequestResult( event:AIRFacebookExtendedUserProfileEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookExtendedUserProfileEvent.PROFILE_LOADED, onExtendedProfileRequestResult );
             if( event.errorMessage ) {
-                Logger.log( "Extended user profile error: " + event.errorMessage );
+                Logger.log( "[EventHandler] Extended user profile error: " + event.errorMessage );
                 return;
             }
 
-            Logger.log( "Extended user profile loaded, printing" );
-            printExtendedProfile( event.extendedUserProfile );
+            Logger.log( "[EventHandler] Extended user profile loaded" );
         }
 
         private function onUserFriendsRequestResult( event:AIRFacebookUserFriendsEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookUserFriendsEvent.REQUEST_RESULT, onUserFriendsRequestResult );
             if( event.errorMessage ) {
-                Logger.log( "User friends request error: " + event.errorMessage );
+                Logger.log( "[EventHandler] User friends request error: " + event.errorMessage );
                 return;
             }
-
-            Logger.log( "User friends loaded, printing out friends" );
-            const length:uint = event.friends.length;
-            for( var i:uint = 0; i < length; i++ ) {
-                printExtendedProfile( event.friends[i] );
-            }
+            Logger.log( "[EventHandler] User friends loaded " + event.friends.length );
         }
+
+        /**
+         *
+         *
+         * Private API
+         *
+         *
+         */
 
         private function printExtendedProfile( userProfile:ExtendedUserProfile ):void {
             const props:Vector.<String> = new <String>[ "name", "birthday", "link", "picture" ];

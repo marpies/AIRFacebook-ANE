@@ -2,11 +2,14 @@ package com.marpies.demo.facebook.screens {
 
     import com.marpies.ane.facebook.AIRFacebook;
     import com.marpies.ane.facebook.data.AIRFacebookGameRequest;
+    import com.marpies.ane.facebook.data.AIRFacebookGameRequestActionType;
     import com.marpies.ane.facebook.data.AIRFacebookGameRequestFilter;
-    import com.marpies.ane.facebook.data.AIRFacebookGameRequestType;
     import com.marpies.ane.facebook.events.AIRFacebookGameRequestEvent;
     import com.marpies.ane.facebook.events.AIRFacebookOpenGraphEvent;
     import com.marpies.ane.facebook.events.AIRFacebookUserGameRequestsEvent;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookGameRequestListener;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookOpenGraphListener;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookUserGameRequestsListener;
     import com.marpies.utils.Constants;
     import com.marpies.utils.HorizontalLayoutBuilder;
     import com.marpies.utils.Logger;
@@ -23,7 +26,10 @@ package com.marpies.demo.facebook.screens {
     import starling.display.DisplayObject;
     import starling.events.Event;
 
-    public class GameRequestScreen extends BaseScreen {
+    public class GameRequestScreen extends BaseScreen implements
+            IAIRFacebookGameRequestListener,
+            IAIRFacebookUserGameRequestsListener,
+            IAIRFacebookOpenGraphListener {
 
         private var mRequestTypeLabel:Label;
         private var mRequestTypeDropdown:PickerList;
@@ -72,15 +78,16 @@ package com.marpies.demo.facebook.screens {
             /* Request type */
                 /* Label */
             mRequestTypeLabel = new Label();
-            mRequestTypeLabel.text = "Request type:";
+            mRequestTypeLabel.text = "Request action type:";
             column1.addChild( mRequestTypeLabel );
                 /* Dropdown */
             mRequestTypeDropdown = new PickerList();
             mRequestTypeDropdown.dataProvider = new ListCollection(
                     [
-                        { text: AIRFacebookGameRequestType.ASK_FOR.toUpperCase() },
-                        { text: AIRFacebookGameRequestType.SEND.toUpperCase() },
-                        { text: AIRFacebookGameRequestType.TURN.toUpperCase() }
+                        { text: AIRFacebookGameRequestActionType.NONE.toUpperCase() },
+                        { text: AIRFacebookGameRequestActionType.ASK_FOR.toUpperCase() },
+                        { text: AIRFacebookGameRequestActionType.SEND.toUpperCase() },
+                        { text: AIRFacebookGameRequestActionType.TURN.toUpperCase() }
                     ]
             );
             mRequestTypeDropdown.typicalItem = "ASK_FOR";
@@ -182,7 +189,7 @@ package com.marpies.demo.facebook.screens {
             mDeleteAppRequestButton = new Button();
             mDeleteAppRequestButton.label = "Delete game request";
             mDeleteAppRequestButton.isEnabled = AIRFacebook.isSupported;
-            mDeleteAppRequestButton.nameList.add( Button.ALTERNATE_STYLE_NAME_DANGER_BUTTON );
+            mDeleteAppRequestButton.styleNameList.add( Button.ALTERNATE_STYLE_NAME_DANGER_BUTTON );
             mDeleteAppRequestButton.addEventListener( Event.TRIGGERED, onDeleteUserGameRequestButtonTriggered );
             column2.addChild( mDeleteAppRequestButton );
 
@@ -206,7 +213,9 @@ package com.marpies.demo.facebook.screens {
          */
 
         private function onSendButtonTriggered( event:Event ):void {
-            AIRFacebook.addEventListener( AIRFacebookGameRequestEvent.REQUEST_RESULT, onRequestResult );
+            /* This screen implements 'IAIRFacebookGameRequestListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookGameRequestEvent.REQUEST_RESULT, onRequestResult );
+
             const requestType:String = mRequestTypeDropdown.selectedItem.text.toLowerCase();
             const data:String = (mDataInput.text != "") ? mDataInput.text : null;
             const friendID:String = (mFriendIDInput.text != "") ? mFriendIDInput.text : null;
@@ -215,32 +224,25 @@ package com.marpies.demo.facebook.screens {
             switch( requestType ) {
                 case "askfor":
                     Logger.log( "Showing ASK_FOR dialog" );
-                    AIRFacebook.showGameRequestDialog( requestType, mMessageInput.text, mTitleInput.text, mObjectIDInput.text, filter, data, null, friendID );
+                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, mObjectIDInput.text, filter, data, null, friendID, this );
                     break;
                 case "send":
                     Logger.log( "Showing SEND dialog" );
-                    AIRFacebook.showGameRequestDialog( requestType, mMessageInput.text, mTitleInput.text, mObjectIDInput.text, filter, data, null, friendID );
+                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, mObjectIDInput.text, filter, data, null, friendID, this );
                     break;
                 case "turn":
                     Logger.log( "Showing TURN dialog" );
-                    AIRFacebook.showGameRequestDialog( requestType, mMessageInput.text, mTitleInput.text, null, filter, data, null, friendID );
+                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, null, filter, data, null, friendID, this );
+                    break;
+                case "none":
+                    Logger.log( "Showing NONE dialog" );
+                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, null, filter, data, null, friendID, this );
                     break;
             }
         }
 
         private function onRequestUserGameRequestsButtonTriggered():void {
-            AIRFacebook.addEventListener( AIRFacebookUserGameRequestsEvent.REQUEST_RESULT, onUserGameRequestsResult );
-            AIRFacebook.requestUserGameRequests( new <String>[
-                "action_type",
-                "application",
-                "created_time",
-                "data",
-                "from",
-                "id",
-                "message",
-                "object",
-                "to"
-            ] );
+            requestUserGameRequests();
         }
 
         private function onDeleteUserGameRequestButtonTriggered():void {
@@ -248,8 +250,11 @@ package com.marpies.demo.facebook.screens {
                 const request:AIRFacebookGameRequest = mAppRequestsDropdown.selectedItem as AIRFacebookGameRequest;
                 if( request ) {
                     Logger.log( "Game request to delete: " + request.id + " " + request.message + " " + request.actionType );
-                    AIRFacebook.addEventListener( AIRFacebookOpenGraphEvent.REQUEST_RESULT, onUserGameRequestDeleteResult );
-                    AIRFacebook.deleteGameRequest( request.id );
+
+                    /* This screen implements 'IAIRFacebookOpenGraphListener', no need for event listener */
+                    //AIRFacebook.addEventListener( AIRFacebookOpenGraphEvent.REQUEST_RESULT, onUserGameRequestDeleteResult );
+
+                    AIRFacebook.deleteGameRequest( request.id, this );
                 }
             }
         }
@@ -261,42 +266,101 @@ package com.marpies.demo.facebook.screens {
         /**
          *
          *
-         * Result handlers
+         * AIRFacebook handlers (methods defined by IAIRFacebook******* interfaces)
          *
          *
+         */
+
+        /**
+         * Open graph (delete game request)
+         */
+
+        public function onFacebookOpenGraphSuccess( jsonResponse:Object, rawResponse:String ):void {
+            Logger.log( "User game request DELETE success " + jsonResponse.success );
+            /* Refresh list of available game requests for current user */
+            Logger.log( "Refreshing available game requests..." );
+            requestUserGameRequests();
+        }
+
+        public function onFacebookOpenGraphError( errorMessage:String ):void {
+            Logger.log( "User game request DELETE error " + errorMessage );
+        }
+
+        /**
+         * Retrieving user game requests
+         */
+
+        public function onFacebookUserGameRequestsSuccess( gameRequests:Vector.<AIRFacebookGameRequest> ):void {
+            Logger.log( "User Game Requests result " + gameRequests );
+            mAppRequestsDropdown.dataProvider = new ListCollection( gameRequests );
+        }
+
+        public function onFacebookUserGameRequestsError( errorMessage:String ):void {
+            Logger.log( "User game requests error" + errorMessage );
+        }
+
+        /**
+         * Sending game requests
+         */
+
+        public function onFacebookGameRequestSuccess( requestID:String, recipients:Vector.<String> ):void {
+            Logger.log( "Game Request success, request ID: " + requestID + " and recipients: " + recipients );
+        }
+
+        public function onFacebookGameRequestCancel():void {
+            Logger.log( "Game Request cancelled" );
+        }
+
+        public function onFacebookGameRequestError( errorMessage:String ):void {
+            Logger.log( "Game Request error: " + errorMessage );
+        }
+
+        /**
+         * Event handlers (just for demonstration purposes)
          */
 
         private function onRequestResult( event:AIRFacebookGameRequestEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookGameRequestEvent.REQUEST_RESULT, onRequestResult );
             if( event.errorMessage ) {
-                Logger.log( "Game Request error: " + event.errorMessage );
+                Logger.log( "[EventHandler] Game Request error: " + event.errorMessage );
             } else if( event.wasCancelled ) {
-                Logger.log( "Game Request cancelled" );
+                Logger.log( "[EventHandler] Game Request cancelled" );
             } else {
-                Logger.log( "Game Request success, request ID: " + event.requestID + " and recipients: " + event.recipients );
+                Logger.log( "[EventHandler] Game Request success, request ID: " + event.requestID + " and recipients: " + event.recipients );
             }
         }
 
         private function onUserGameRequestsResult( event:AIRFacebookUserGameRequestsEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookUserGameRequestsEvent.REQUEST_RESULT, onUserGameRequestsResult );
             if( event.errorMessage ) {
-                Logger.log( "User game requests error" + event.errorMessage );
+                Logger.log( "[EventHandler] User game requests error" + event.errorMessage );
                 return;
             }
-            Logger.log( "User Game Requests result " + event.gameRequests );
-            mAppRequestsDropdown.dataProvider = new ListCollection( event.gameRequests );
+            Logger.log( "[EventHandler] User Game Requests result " + event.gameRequests );
         }
 
         private function onUserGameRequestDeleteResult( event:AIRFacebookOpenGraphEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookOpenGraphEvent.REQUEST_RESULT, onUserGameRequestDeleteResult );
             if( event.errorMessage ) {
-                Logger.log( "User game request DELETE error " + event.errorMessage );
+                Logger.log( "[EventHandler] User game request DELETE error " + event.errorMessage );
                 return;
             }
 
-            Logger.log( "User game request DELETE success " + event.jsonResponse["success"] );
+            Logger.log( "[EventHandler] User game request DELETE success " + event.jsonResponse["success"] );
+        }
 
-            AIRFacebook.addEventListener( AIRFacebookUserGameRequestsEvent.REQUEST_RESULT, onUserGameRequestsResult );
+        /**
+         *
+         *
+         * Private API
+         *
+         *
+         */
+
+        private function requestUserGameRequests():void {
+            /* This screen implements 'IAIRFacebookUserGameRequestsListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookUserGameRequestsEvent.REQUEST_RESULT, onUserGameRequestsResult );
+
             AIRFacebook.requestUserGameRequests( new <String>[
                 "action_type",
                 "application",
@@ -307,7 +371,7 @@ package com.marpies.demo.facebook.screens {
                 "message",
                 "object",
                 "to"
-            ] );
+            ], this );
         }
 
     }

@@ -20,7 +20,6 @@ package {
     import feathers.controls.StackScreenNavigator;
     import feathers.controls.StackScreenNavigatorItem;
     import feathers.motion.Fade;
-    import feathers.motion.Slide;
     import feathers.themes.MetalWorksMobileTheme;
 
     import starling.display.Sprite;
@@ -62,7 +61,7 @@ package {
                 mScreenNavigator.popTransition = Fade.createFadeOutTransition();
 
                 /* Login screen */
-                const loginScreenItem:StackScreenNavigatorItem = new StackScreenNavigatorItem( LoginScreen );
+                const loginScreenItem:StackScreenNavigatorItem = new StackScreenNavigatorItem( new LoginScreen );
                 loginScreenItem.setScreenIDForPushEvent( "show" + Screens.PERMISSIONS, Screens.PERMISSIONS );
                 loginScreenItem.properties.permissions = permissions;
                 mScreenNavigator.addScreen( Screens.LOGIN, loginScreenItem );

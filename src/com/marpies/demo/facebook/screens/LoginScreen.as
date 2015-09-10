@@ -1,11 +1,21 @@
 package com.marpies.demo.facebook.screens {
 
     import com.marpies.ane.facebook.AIRFacebook;
+    import com.marpies.ane.facebook.data.AIRFacebookLinkParameter;
+    import com.marpies.ane.facebook.data.BasicUserProfile;
     import com.marpies.ane.facebook.events.AIRFacebookBasicUserProfileEvent;
     import com.marpies.ane.facebook.events.AIRFacebookCachedAccessTokenEvent;
+    import com.marpies.ane.facebook.events.AIRFacebookDeferredAppLinkEvent;
     import com.marpies.ane.facebook.events.AIRFacebookLoginEvent;
     import com.marpies.ane.facebook.events.AIRFacebookLogoutEvent;
     import com.marpies.ane.facebook.events.AIRFacebookUserProfilePictureEvent;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookBasicUserProfileListener;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookCachedAccessTokenListener;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookDeferredAppLinkListener;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookGameRequestInvokeListener;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookLoginListener;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookLogoutListener;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookUserProfilePictureListener;
     import com.marpies.utils.AlertManager;
     import com.marpies.utils.Constants;
     import com.marpies.utils.Logger;
@@ -17,12 +27,21 @@ package com.marpies.demo.facebook.screens {
     import feathers.data.ListCollection;
     import feathers.layout.VerticalLayout;
 
-    import starling.display.DisplayObject;
+    import flash.display.Bitmap;
+    import flash.net.URLVariables;
 
+    import starling.display.DisplayObject;
     import starling.display.Image;
     import starling.events.Event;
 
-    public class LoginScreen extends BaseScreen {
+    public class LoginScreen extends BaseScreen implements
+            IAIRFacebookCachedAccessTokenListener,
+            IAIRFacebookBasicUserProfileListener,
+            IAIRFacebookDeferredAppLinkListener,
+            IAIRFacebookUserProfilePictureListener,
+            IAIRFacebookLoginListener,
+            IAIRFacebookLogoutListener,
+            IAIRFacebookGameRequestInvokeListener {
 
         private var mPermissions:Vector.<String>;
 
@@ -47,8 +66,16 @@ package com.marpies.demo.facebook.screens {
             if( !FACEBOOK_APP_ID ) {
                 throw new Error( "Set your Facebook app ID in LoginScreen.as" );
             }
-            if( AIRFacebook.init( FACEBOOK_APP_ID, false, null, true ) ) {
-                AIRFacebook.addEventListener( AIRFacebookCachedAccessTokenEvent.RESULT, onCachedAccessTokenResult );
+
+            /* We could add listeners to these events here but this screen implements
+             * 'IAIRFacebookCachedAccessTokenListener' and 'IAIRFacebookBasicUserProfileListener' */
+            //AIRFacebook.addEventListener( AIRFacebookCachedAccessTokenEvent.RESULT, onCachedAccessTokenResult );
+            //AIRFacebook.addEventListener( AIRFacebookBasicUserProfileEvent.PROFILE_READY, onBasicUserProfileReady );
+
+            /* Setting 'cached token' and 'basic user profile' listeners during initialization */
+            if( AIRFacebook.init( FACEBOOK_APP_ID, false, null, true, this, this ) ) {
+                /* We want to know when app is invoked from a Facebook Game Request notification */
+                AIRFacebook.addGameRequestInvokeListener( this );   // Or we could use the standard event listener wth AIRFacebookGameRequestInvokeEvent.INVOKE
                 Logger.log( "Initialized Facebook SDK " + AIRFacebook.sdkVersion );
             } else {
                 Logger.log( "Failed to initialize Facebook SDK" );
@@ -129,14 +156,11 @@ package com.marpies.demo.facebook.screens {
                     if( AIRFacebook.isBasicUserProfileReady ) {
                         mUserLabel.text = AIRFacebook.basicUserProfile.name;
                     }
-                    /* Otherwise wait for the profile to be ready */
-                    else {
-                        AIRFacebook.addEventListener( AIRFacebookBasicUserProfileEvent.PROFILE_READY, onBasicUserProfileReady );
-                    }
                 } else {
                     mUserLabel.text = "Not logged in.";
                     if( mProfilePicture ) {
                         mProfilePicture.removeFromParent( true );
+                        mProfilePicture.texture.dispose();
                         mProfilePicture = null;
                     }
                 }
@@ -167,20 +191,26 @@ package com.marpies.demo.facebook.screens {
                 return;
             }
 
-            AIRFacebook.addEventListener( AIRFacebookLoginEvent.LOGIN_RESULT, onLoginResult );
+            /* We could add listener to LOGIN_RESULT event but this screen implements 'IAIRFacebookLoginListener'.
+             * By passing 'this' to login methods, one of the methods defined by that interface will be called after login */
+            //AIRFacebook.addEventListener( AIRFacebookLoginEvent.LOGIN_RESULT, onLoginResult );
+
             /* READ selected in the PickerList */
             if( mLoginTypeList.selectedIndex == 0 ) {
-                AIRFacebook.loginWithReadPermissions( mPermissions );
+                AIRFacebook.loginWithReadPermissions( mPermissions, this );
             }
             /* PUBLISH selected in the PickerList */
             else {
-                AIRFacebook.loginWithPublishPermissions( mPermissions );
+                AIRFacebook.loginWithPublishPermissions( mPermissions, this );
             }
         }
 
         private function onLogoutButtonTriggered():void {
-            AIRFacebook.addEventListener( AIRFacebookLogoutEvent.LOGOUT_RESULT, onLogoutResult );
-            AIRFacebook.logout( true );
+            /* We could add listener to LOGOUT_RESULT event but this screen implements 'IAIRFacebookLogoutListener'.
+             * By passing 'this' to logout method, one of the methods defined by that interface will be called after logout */
+            //AIRFacebook.addEventListener( AIRFacebookLogoutEvent.LOGOUT_RESULT, onLogoutResult );
+
+            AIRFacebook.logout( true, "Log out from Facebook?", "You will not be able to connect with friends!", "Log out", "Cancel", this );
         }
 
         private function onPermissionsButtonTriggered():void {
@@ -190,73 +220,195 @@ package com.marpies.demo.facebook.screens {
         /**
          *
          *
-         * AIRFacebook handlers
+         * AIRFacebook handlers (methods defined by IAIRFacebook******* interfaces)
          *
          *
          */
 
-        private function onCachedAccessTokenResult( event:AIRFacebookCachedAccessTokenEvent ):void {
-            AIRFacebook.removeEventListener( AIRFacebookCachedAccessTokenEvent.RESULT, onCachedAccessTokenResult );
-            if( event.wasLoaded ) {
-                Logger.log( "Access token was loaded from cache." );
-                refreshUI();
-            }
+        /**
+         * Cached access token
+         */
+
+        public function onFacebookCachedAccessTokenLoaded():void {
+            /* This screen implements 'IAIRFacebookDeferredAppLinkListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookDeferredAppLinkEvent.REQUEST_RESULT, onDeferredAppLinkResult );
+
+            Logger.log( "Access token was loaded from cache - fetching deferred app link" );
+            AIRFacebook.fetchDeferredAppLink( this );
+            refreshUI();
         }
 
-        private function onLoginResult( event:AIRFacebookLoginEvent ):void {
-            AIRFacebook.removeEventListener( AIRFacebookLoginEvent.LOGIN_RESULT, onLoginResult );
+        public function onFacebookCachedAccessTokenNotLoaded():void {
+            Logger.log( "Access token was NOT found" );
+        }
 
-            if( event.errorMessage ) {
-                Logger.log( "Login error: " + event.errorMessage );
-            } else if( event.wasCancelled ) {
-                Logger.log( "Login cancelled" );
-            } else {
-                Logger.log( "Login successful" );
-                if( !mProfilePicture ) {
-                    if( AIRFacebook.isBasicUserProfileReady ) {
-                        AIRFacebook.addEventListener( AIRFacebookUserProfilePictureEvent.RESULT, onProfilePictureResult );
-                        /* Ignoring the returned URL as we want to have it auto loaded */
-                        AIRFacebook.requestUserProfilePicture( 200, 200, true );
-                    }
+        /**
+         * Deferred app link
+         */
+
+        public function onFacebookDeferredAppLinkSuccess( targetURL:String, parameters:Vector.<AIRFacebookLinkParameter> ):void {
+            Logger.log( "Deferred app link success | targetURL: " + targetURL + " | parameters: " + parameters );
+        }
+
+        public function onFacebookDeferredAppLinkNotFound():void {
+            Logger.log( "Deferred app link not found" );
+        }
+
+        public function onFacebookDeferredAppLinkError( errorMessage:String ):void {
+            Logger.log( "Deferred app link error: " + errorMessage );
+        }
+
+        /**
+         * Basic user profile ready
+         */
+
+        public function onFacebookBasicUserProfileReady( user:BasicUserProfile ):void {
+            Logger.log( "Basic user profile ready" );
+
+            /* This screen implements 'IAIRFacebookUserProfilePictureListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookUserProfilePictureEvent.RESULT, onProfilePictureResult );
+
+            /* Load the profile picture */
+            AIRFacebook.requestUserProfilePicture( 200, 200, true, this );
+
+            refreshUI();
+        }
+
+        /**
+         * Login
+         */
+
+        public function onFacebookLoginSuccess( deniedPermissions:Vector.<String>, grantedPermissions:Vector.<String> ):void {
+            Logger.log( "Login successful \ndenied permissions:" + deniedPermissions + "\ngranted permissions: " + grantedPermissions + "\nfetching deferred app link" );
+            AIRFacebook.fetchDeferredAppLink( this );
+            if( !mProfilePicture ) {
+                if( AIRFacebook.isBasicUserProfileReady ) {
+                    /* This screen implements 'IAIRFacebookUserProfilePictureListener', no need for event listener */
+                    //AIRFacebook.addEventListener( AIRFacebookUserProfilePictureEvent.RESULT, onProfilePictureResult );
+
+                    /* Ignoring the returned URL as we want to have it auto loaded */
+                    AIRFacebook.requestUserProfilePicture( 200, 200, true, this );
                 }
             }
 
             refreshUI();
         }
 
+        public function onFacebookLoginCancel():void {
+            Logger.log( "Login cancelled" );
+        }
+
+        public function onFacebookLoginError( errorMessage:String ):void {
+            Logger.log( "Login error: " + errorMessage );
+        }
+
+        /**
+         * User profile picture
+         */
+
+        public function onFacebookUserProfilePictureSuccess( picture:Bitmap ):void {
+            Logger.log( "Profile picture loaded" );
+            mProfilePicture = Image.fromBitmap( picture, false, Constants.scaleFactor );
+            addChildAt( mProfilePicture, 0 );
+        }
+
+        public function onFacebookUserProfilePictureError( errorMessage:String ):void {
+            Logger.log( "Profile picture error: " + errorMessage );
+        }
+
+        /**
+         * Logout
+         */
+
+        public function onFacebookLogoutSuccess():void {
+            /* If user logs in again then we will want to know when the user profile is ready
+             * (the listener that we added using AIRFacebook.init() call is only called once).
+             * Adding the listener using this method it will be called until the moment we remove it. */
+            AIRFacebook.addBasicUserProfileListener( this );
+
+            Logger.log( "Log out success" );
+            refreshUI();
+        }
+
+        public function onFacebookLogoutCancel():void {
+            Logger.log( "Log out cancelled" );
+        }
+
+        public function onFacebookLogoutError( errorMessage:String ):void {
+            Logger.log( "Log out error: " + errorMessage );
+        }
+
+        /**
+         * Game Request Invoke
+         */
+
+        public function onFacebookGameRequestInvoke( requestIDs:Vector.<String>, URLVars:URLVariables, arguments:Array, fullURL:String, reason:String ):void {
+            /* We can remove this listener, if no longer needed */
+            //AIRFacebook.removeGameRequestInvokeListener( this );
+
+            Logger.log( "Game request invoke: " + requestIDs );
+
+            /* Now we could load Game Requests for current user using AIRFacebook.requestUserGameRequests()
+             * and see which Game Requests the app was invoked with and do further processing. */
+        }
+
+
+
+
+        /**
+         * Event handlers (just for demonstration purposes)
+         */
+
+        private function onCachedAccessTokenResult( event:AIRFacebookCachedAccessTokenEvent ):void {
+            AIRFacebook.removeEventListener( AIRFacebookCachedAccessTokenEvent.RESULT, onCachedAccessTokenResult );
+            Logger.log( "[EventHandler] Access token from cache: " + event.wasLoaded );
+        }
+
+        private function onLoginResult( event:AIRFacebookLoginEvent ):void {
+            AIRFacebook.removeEventListener( AIRFacebookLoginEvent.LOGIN_RESULT, onLoginResult );
+
+            if( event.errorMessage ) {
+                Logger.log( "[EventHandler] Login error: " + event.errorMessage );
+            } else if( event.wasCancelled ) {
+                Logger.log( "[EventHandler] Login cancelled" );
+            } else {
+                Logger.log( "[EventHandler] Login successful" );
+            }
+        }
+
         private function onLogoutResult( event:AIRFacebookLogoutEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookLogoutEvent.LOGOUT_RESULT, onLogoutResult );
 
             if( event.errorMessage ) {
-                Logger.log( "Logout error: " + event.errorMessage );
+                Logger.log( "[EventHandler] Logout error: " + event.errorMessage );
             } else if( event.wasCancelled ) {
-                Logger.log( "Logout cancelled" );
+                Logger.log( "[EventHandler] Logout cancelled" );
             } else {
-                Logger.log( "Logout success" );
+                Logger.log( "[EventHandler] Logout success" );
             }
-
-            refreshUI();
         }
 
         private function onBasicUserProfileReady( event:AIRFacebookBasicUserProfileEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookBasicUserProfileEvent.PROFILE_READY, onBasicUserProfileReady );
-            /* Load the profile picture */
-            AIRFacebook.addEventListener( AIRFacebookUserProfilePictureEvent.RESULT, onProfilePictureResult );
-            AIRFacebook.requestUserProfilePicture( 200, 200, true );
-
-            refreshUI();
+            Logger.log( "[EventHandler] basic user profile ready" );
         }
 
         private function onProfilePictureResult( event:AIRFacebookUserProfilePictureEvent ):void {
             AIRFacebook.removeEventListener( AIRFacebookUserProfilePictureEvent.RESULT, onProfilePictureResult );
             if( event.errorMessage ) {
-                Logger.log( "Error loading profile picture: " + event.errorMessage );
+                Logger.log( "[EventHandler] Error loading profile picture: " + event.errorMessage );
                 return;
             }
+            Logger.log( "[EventHandler] Profile picture loaded" );
+        }
 
-            Logger.log( "Profile picture loaded" );
-            mProfilePicture = Image.fromBitmap( event.profilePicture, false, Constants.scaleFactor );
-            addChildAt( mProfilePicture, 0 );
+        private function onDeferredAppLinkResult( event:AIRFacebookDeferredAppLinkEvent ):void {
+            AIRFacebook.removeEventListener( AIRFacebookDeferredAppLinkEvent.REQUEST_RESULT, onDeferredAppLinkResult );
+            if( event.linkNotFound ) {
+                Logger.log( "[EventHandler] Deferred app link was not found" );
+            } else {
+                Logger.log( "[EventHandler] Deferred app link: " + event.targetURL + " | parameters: " + event.parameters );
+            }
         }
 
         /**

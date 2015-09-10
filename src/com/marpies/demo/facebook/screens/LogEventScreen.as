@@ -115,8 +115,8 @@ package com.marpies.demo.facebook.screens {
                 params = { };
                 params[mParametersKeyInput.text] = mParametersValueInput.text;
             }
-            AIRFacebook.logEvent( mEventNameInput.text, params, Number( mValueToSumInput.text ) );
             Logger.log( "Logging Facebook event: " + mEventNameInput.text );
+            AIRFacebook.logEvent( mEventNameInput.text, params, Number( mValueToSumInput.text ) );
         }
 
     }

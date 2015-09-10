@@ -2,31 +2,24 @@ package com.marpies.demo.facebook.screens {
 
     import com.marpies.ane.facebook.AIRFacebook;
     import com.marpies.ane.facebook.events.AIRFacebookShareEvent;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookShareListener;
     import com.marpies.utils.Constants;
-    import com.marpies.utils.Logger;
-    import com.marpies.utils.Logger;
     import com.marpies.utils.Logger;
     import com.marpies.utils.VerticalLayoutBuilder;
 
     import feathers.controls.Button;
     import feathers.controls.Check;
-    import feathers.controls.Header;
     import feathers.controls.Label;
-
-    import feathers.controls.PanelScreen;
     import feathers.controls.TextInput;
     import feathers.layout.VerticalLayout;
 
     import flash.display.Bitmap;
-    import flash.events.MediaEvent;
-    import flash.media.CameraRoll;
 
     import starling.display.DisplayObject;
-
     import starling.display.Image;
     import starling.events.Event;
 
-    public class SharePhotoScreen extends BaseScreen {
+    public class SharePhotoScreen extends BaseScreen implements IAIRFacebookShareListener {
 
         [Embed(source="/../assets/starling-logo.png")]
         protected static const STARLING_LOGO:Class;
@@ -132,28 +125,64 @@ package com.marpies.demo.facebook.screens {
          */
 
         private function onShareButtonTriggered( event:Event ):void {
-            AIRFacebook.addEventListener( AIRFacebookShareEvent.SHARE_RESULT, onShareResult );
-            if( mUseMessengerCheck.isSelected ) {
-                AIRFacebook.sharePhotoMessage( mShareURLCheck.isSelected ? mImageURLInput.text : mStarlingLogoBitmap.bitmapData );
-            } else {
-                AIRFacebook.sharePhoto( mShareURLCheck.isSelected ? mImageURLInput.text : mStarlingLogoBitmap.bitmapData, false, mShareWithoutUICheck.isSelected, mWithoutUIMessageInput.text );
-            }
-        }
+            /* This screen implements 'IAIRFacebookShareListener', no need for event listener */
+            //AIRFacebook.addEventListener( AIRFacebookShareEvent.SHARE_RESULT, onShareResult );
 
-        private function onShareResult( event:AIRFacebookShareEvent ):void {
-            AIRFacebook.removeEventListener( AIRFacebookShareEvent.SHARE_RESULT, onShareResult );
-            if( event.errorMessage ) {
-                Logger.log( "Share photo error: " + event.errorMessage );
-            } else if( event.wasCancelled ) {
-                Logger.log( "Share photo cancelled" );
+            if( mUseMessengerCheck.isSelected ) {
+                AIRFacebook.sharePhotoMessage(
+                        mShareURLCheck.isSelected ? mImageURLInput.text : mStarlingLogoBitmap.bitmapData,
+                        false,
+                        this
+                );
             } else {
-                Logger.log( "Share photo success, post id: " + event.postID );
+                AIRFacebook.sharePhoto(
+                        mShareURLCheck.isSelected ? mImageURLInput.text : mStarlingLogoBitmap.bitmapData,
+                        false,
+                        mShareWithoutUICheck.isSelected,
+                        mWithoutUIMessageInput.text,
+                        this
+                );
             }
         }
 
         private function onShareURLCheckChange( event:Event ):void {
             mStarlingLogoImage.alpha = mShareURLCheck.isSelected ? 0.5 : 1.0;
             mImageURLInput.isEnabled = mShareURLCheck.isSelected;
+        }
+
+        /**
+         *
+         *
+         * AIRFacebook handlers (methods defined by IAIRFacebookShareListener interface)
+         *
+         *
+         */
+
+        public function onFacebookShareSuccess( postID:String ):void {
+            Logger.log( "Share photo success, post id: " + postID );
+        }
+
+        public function onFacebookShareCancel():void {
+            Logger.log( "Share photo cancelled" );
+        }
+
+        public function onFacebookShareError( errorMessage:String ):void {
+            Logger.log( "Share photo error: " + errorMessage );
+        }
+
+        /**
+         * Event handlers (just for demonstration purposes)
+         */
+
+        private function onShareResult( event:AIRFacebookShareEvent ):void {
+            AIRFacebook.removeEventListener( AIRFacebookShareEvent.SHARE_RESULT, onShareResult );
+            if( event.errorMessage ) {
+                Logger.log( "[EventHandler] Share photo error: " + event.errorMessage );
+            } else if( event.wasCancelled ) {
+                Logger.log( "[EventHandler] Share photo cancelled" );
+            } else {
+                Logger.log( "[EventHandler] Share photo success, post id: " + event.postID );
+            }
         }
 
     }

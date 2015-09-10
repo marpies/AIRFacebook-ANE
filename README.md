@@ -1,5 +1,4 @@
-AIRFacebook | Facebook extension for Adobe AIR (iOS & Android)
-==============================================================
+# AIRFacebook | Facebook extension for Adobe AIR (iOS & Android)
 
 AIRFacebook offers a rich and cross-platform API to the latest Facebook SDK for iOS and Android.
 
@@ -7,35 +6,41 @@ This is a demo application highlighting the core features of the extension. This
 
 The demo application is powered by [Starling Framework](https://github.com/Gamua/Starling-Framework) and [Feathers UI](https://github.com/joshtynjala/feathers). Make sure to add these libraries to your project when building the application.
 
-Using the ANE
--------------
+### Change log
+
+#### September 10, 2015
+
+* UPDATED Facebook SDK to version 4.5.1 for both iOS and Android
+* ADDED 'fetchDeferredAppLink' method
+* ADDED listener interfaces which allow for simple and error free implementation of request callbacks
+* CHANGED 'actionType' parameter of 'showGameRequestDialog' method to be optional
+* RENAMED class 'AIRFacebookGameRequestType' to more appropriate 'AIRFacebookGameRequestActionType'
+
+See [full change log](http://nativeextensions.marpies.com/facebook/changelog.txt) for previous updates.
+
+### Using the ANE
 
 See [guide PDF](http://nativeextensions.marpies.com/facebook/guide.pdf).
 
-Running the demo application
-----------------------------
+### Running the demo application
 
 After obtaining a Facebook app ID and adding the ANE to your project, enter your Facebook app ID in the [LoginScreen](src/com/marpies/demo/facebook/screens/LoginScreen.as#L42) class. Next, open `assets/Main-app.xml` file and replace `{FACEBOOK_APP_ID}` and `{FACEBOOK_DISPLAY_NAME}` with the values from your Facebook developer profile. Compile and run as usually.
 
-Documentation
--------------
+### Documentation
 
 * [ASDoc reference](http://nativeextensions.marpies.com/facebook/docs/)
 * [Guide PDF](http://nativeextensions.marpies.com/facebook/guide.pdf)
 
-Author
-------
+### Author
 
 Demo application and ANE has been written by [Marcel Piestansky](http://marpies.com).
 
-License
--------
+### License
 
 You are given permission to use the ANE in agreement with the following license and copyright terms.
 Read the [EULA](LICENSE.txt) before downloading and using this software.
 
-Credits
--------
+### Credits
 
 Demo application uses the following libraries:
 * [Starling Framework by Daniel Sperl](https://twitter.com/PrimaryFeather)
