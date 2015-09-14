@@ -4,7 +4,21 @@ AIRFacebook offers a rich and cross-platform API to the latest Facebook SDK for 
 
 This is a demo application highlighting the core features of the extension. This repository also includes test version of the ANE (inside assets folder) that you are free to use during your development. In order to publish an application that uses this ANE you need to [obtain a license](https://gumroad.com/l/airFB).
 
-The demo application is powered by [Starling Framework](https://github.com/Gamua/Starling-Framework) and [Feathers UI](https://github.com/joshtynjala/feathers). Make sure to add these libraries to your project when building the application.
+### Key features
+
+* User authentication and permission management
+* Content sharing (links, photos) to Facebook feed or via Messenger
+* Sharing custom Open Graph stories
+* Sending Game Requests and receiving events from notifications
+* Sending App invitations
+* Open Graph queries
+* Scores & achievements for games
+
+### Requirements
+
+* iOS 7 or newer
+* Android 2.3.3 or newer
+* Adobe AIR 15 or newer
 
 ### Change log
 
@@ -20,16 +34,18 @@ See [full change log](http://nativeextensions.marpies.com/facebook/changelog.txt
 
 ### Using the ANE
 
-See [guide PDF](http://nativeextensions.marpies.com/facebook/guide.pdf).
+For instructions on how to set up your app with the ANE and code snippets on using some of the API read the following guides:
+* [Setting up with AIR app](http://marpies.com/2015/09/setup-adobe-air-with-facebook/)
+* [Getting started with ANE's API](http://marpies.com/2015/09/getting-started-with-airfacebook-api/)
+* [FAQ](http://marpies.com/2015/09/airfacebook-faq/)
 
 ### Running the demo application
 
-After obtaining a Facebook app ID and adding the ANE to your project, enter your Facebook app ID in the [LoginScreen](src/com/marpies/demo/facebook/screens/LoginScreen.as#L42) class. Next, open `assets/Main-app.xml` file and replace `{FACEBOOK_APP_ID}` and `{FACEBOOK_DISPLAY_NAME}` with the values from your Facebook developer profile. Compile and run as usually.
+After going through the guide [Setting up with AIR app](http://marpies.com/2015/09/setup-adobe-air-with-facebook/), enter your Facebook app ID in the [LoginScreen](src/com/marpies/demo/facebook/screens/LoginScreen.as#L61) class. Add [Starling](http://gamua.com/starling/) and [Feathers](http://feathersui.com) libraries to your project, set [Startup class](https://github.com/marpies/AIRFacebook-ANE/blob/master/src/Startup.as) as your main/document class, compile and run as usually.
 
-### Documentation
+### API reference
 
-* [ASDoc reference](http://nativeextensions.marpies.com/facebook/docs/)
-* [Guide PDF](http://nativeextensions.marpies.com/facebook/guide.pdf)
+* [ActionScript docs](http://nativeextensions.marpies.com/facebook/docs/)
 
 ### Author
 
