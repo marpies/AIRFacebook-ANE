@@ -59,19 +59,3 @@ Read the [EULA](LICENSE.txt) before downloading and using this software.
 Demo application uses the following libraries:
 * [Starling Framework by Daniel Sperl](https://twitter.com/PrimaryFeather)
 * [Feathers UI by Josh Tynjala](https://twitter.com/joshtynjala)
-m/facebook/docs/)
-
-### Author
-
-Demo application and ANE has been written by [Marcel Piestansky](http://marpies.com).
-
-### License
-
-You are given permission to use the ANE in agreement with the following license and copyright terms.
-Read the [EULA](LICENSE.txt) before downloading and using this software.
-
-### Credits
-
-Demo application uses the following libraries:
-* [Starling Framework by Daniel Sperl](https://twitter.com/PrimaryFeather)
-* [Feathers UI by Josh Tynjala](https://twitter.com/joshtynjala)
