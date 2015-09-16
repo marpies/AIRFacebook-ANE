@@ -16,19 +16,16 @@ This is a demo application highlighting the core features of the extension. This
 
 ### Requirements
 
-* iOS 7 or newer
-* Android 2.3.3 or newer
-* Adobe AIR 15 or newer
+* iOS 7+
+* Android 2.3.3+ (ANE v1.2.0), Android 4.0.3+ (ANE v1.3.0)
+* Adobe AIR 18+
 
 ### Change log
 
-#### September 10, 2015
+#### September 16, 2015
 
-* UPDATED Facebook SDK to version 4.5.1 for both iOS and Android
-* ADDED 'fetchDeferredAppLink' method
-* ADDED listener interfaces which allow for simple and error free implementation of request callbacks
-* CHANGED 'actionType' parameter of 'showGameRequestDialog' method to be optional
-* RENAMED class 'AIRFacebookGameRequestType' to more appropriate 'AIRFacebookGameRequestActionType'
+* UPDATED Facebook SDK to version 4.6.0 for both iOS and Android
+* ADDED support for iOS simulator target
 
 See [full change log](http://nativeextensions.marpies.com/facebook/changelog.txt) for previous updates.
 
@@ -37,6 +34,7 @@ See [full change log](http://nativeextensions.marpies.com/facebook/changelog.txt
 For instructions on how to set up your app with the ANE and code snippets on using some of the API read the following guides:
 * [Setting up with AIR app](http://marpies.com/2015/09/setup-adobe-air-with-facebook/)
 * [Getting started with ANE's API](http://marpies.com/2015/09/getting-started-with-airfacebook-api/)
+* [Using listener interfaces](http://marpies.com/2015/09/using-airfacebook-listener-interfaces/)
 * [FAQ](http://marpies.com/2015/09/airfacebook-faq/)
 
 ### Running the demo application
@@ -46,6 +44,22 @@ After going through the guide [Setting up with AIR app](http://marpies.com/2015/
 ### API reference
 
 * [ActionScript docs](http://nativeextensions.marpies.com/facebook/docs/)
+
+### Author
+
+Demo application and ANE has been written by [Marcel Piestansky](http://marpies.com).
+
+### License
+
+You are given permission to use the ANE in agreement with the following license and copyright terms.
+Read the [EULA](LICENSE.txt) before downloading and using this software.
+
+### Credits
+
+Demo application uses the following libraries:
+* [Starling Framework by Daniel Sperl](https://twitter.com/PrimaryFeather)
+* [Feathers UI by Josh Tynjala](https://twitter.com/joshtynjala)
+m/facebook/docs/)
 
 ### Author
 
