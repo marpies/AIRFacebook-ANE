@@ -43,8 +43,8 @@ package com.marpies.demo.facebook.screens {
         private var mObjectIDInput:TextInput;
         private var mDataLabel:Label;
         private var mDataInput:TextInput;
-        private var mFriendIDLabel:Label;
-        private var mFriendIDInput:TextInput;
+        private var mRecipientsIDLabel:Label;
+        private var mRecipientsInput:TextInput;
         private var mAppRequestsDropdown:PickerList;
         private var mRequestAppRequestsButton:Button;
         private var mDeleteAppRequestButton:Button;
@@ -162,14 +162,14 @@ package com.marpies.demo.facebook.screens {
 
             /* Friend ID */
                 /* Label */
-            mFriendIDLabel = new Label();
-            mFriendIDLabel.text = "Friend ID:";
-            column1.addChild( mFriendIDLabel );
+            mRecipientsIDLabel = new Label();
+            mRecipientsIDLabel.text = "Recipients (space separated):";
+            column1.addChild( mRecipientsIDLabel );
                 /* Input */
-            mFriendIDInput = new TextInput();
-            mFriendIDInput.width = Constants.stageWidth >> 2;
-            mFriendIDInput.text = "";
-            column1.addChild( mFriendIDInput );
+            mRecipientsInput = new TextInput();
+            mRecipientsInput.width = Constants.stageWidth >> 2;
+            mRecipientsInput.text = "";
+            column1.addChild( mRecipientsInput );
 
             /* App requests - request and delete */
             mAppRequestsDropdown = new PickerList();
@@ -218,25 +218,25 @@ package com.marpies.demo.facebook.screens {
 
             const requestType:String = mRequestTypeDropdown.selectedItem.text.toLowerCase();
             const data:String = (mDataInput.text != "") ? mDataInput.text : null;
-            const friendID:String = (mFriendIDInput.text != "") ? mFriendIDInput.text : null;
+            const recipients:Vector.<String> = (mRecipientsInput.text != "") ? Vector.<String>( mRecipientsInput.text.split(" ") ) : null;
             const filter:String = (mFilterTypeDropdown.selectedIndex == 0) ? null : mFilterTypeDropdown.selectedItem.text;
 
             switch( requestType ) {
                 case "askfor":
                     Logger.log( "Showing ASK_FOR dialog" );
-                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, mObjectIDInput.text, filter, data, null, friendID, this );
+                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, mObjectIDInput.text, filter, data, null, recipients, this );
                     break;
                 case "send":
                     Logger.log( "Showing SEND dialog" );
-                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, mObjectIDInput.text, filter, data, null, friendID, this );
+                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, mObjectIDInput.text, filter, data, null, recipients, this );
                     break;
                 case "turn":
                     Logger.log( "Showing TURN dialog" );
-                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, null, filter, data, null, friendID, this );
+                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, null, filter, data, null, recipients, this );
                     break;
                 case "none":
                     Logger.log( "Showing NONE dialog" );
-                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, null, filter, data, null, friendID, this );
+                    AIRFacebook.showGameRequestDialog( mMessageInput.text, requestType, mTitleInput.text, null, filter, data, null, recipients, this );
                     break;
             }
         }

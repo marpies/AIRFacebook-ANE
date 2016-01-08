@@ -6,6 +6,7 @@ package com.marpies.demo.facebook.screens {
     import com.marpies.ane.facebook.events.AIRFacebookBasicUserProfileEvent;
     import com.marpies.ane.facebook.events.AIRFacebookCachedAccessTokenEvent;
     import com.marpies.ane.facebook.events.AIRFacebookDeferredAppLinkEvent;
+    import com.marpies.ane.facebook.events.AIRFacebookEvent;
     import com.marpies.ane.facebook.events.AIRFacebookLoginEvent;
     import com.marpies.ane.facebook.events.AIRFacebookLogoutEvent;
     import com.marpies.ane.facebook.events.AIRFacebookUserProfilePictureEvent;
@@ -15,6 +16,7 @@ package com.marpies.demo.facebook.screens {
     import com.marpies.ane.facebook.listeners.IAIRFacebookGameRequestInvokeListener;
     import com.marpies.ane.facebook.listeners.IAIRFacebookLoginListener;
     import com.marpies.ane.facebook.listeners.IAIRFacebookLogoutListener;
+    import com.marpies.ane.facebook.listeners.IAIRFacebookSDKInitListener;
     import com.marpies.ane.facebook.listeners.IAIRFacebookUserProfilePictureListener;
     import com.marpies.utils.AlertManager;
     import com.marpies.utils.Constants;
@@ -41,7 +43,8 @@ package com.marpies.demo.facebook.screens {
             IAIRFacebookUserProfilePictureListener,
             IAIRFacebookLoginListener,
             IAIRFacebookLogoutListener,
-            IAIRFacebookGameRequestInvokeListener {
+            IAIRFacebookGameRequestInvokeListener,
+            IAIRFacebookSDKInitListener {
 
         private var mPermissions:Vector.<String>;
 
@@ -68,17 +71,18 @@ package com.marpies.demo.facebook.screens {
             }
 
             /* We could add listeners to these events here but this screen implements
-             * 'IAIRFacebookCachedAccessTokenListener' and 'IAIRFacebookBasicUserProfileListener' */
+             * 'IAIRFacebookCachedAccessTokenListener', 'IAIRFacebookBasicUserProfileListener', 'IAIRFacebookSDKInitListener' */
             //AIRFacebook.addEventListener( AIRFacebookCachedAccessTokenEvent.RESULT, onCachedAccessTokenResult );
             //AIRFacebook.addEventListener( AIRFacebookBasicUserProfileEvent.PROFILE_READY, onBasicUserProfileReady );
+//            AIRFacebook.addEventListener( AIRFacebookEvent.SDK_INIT, onFacebookSDKInit );
 
-            /* Setting 'cached token' and 'basic user profile' listeners during initialization */
-            if( AIRFacebook.init( FACEBOOK_APP_ID, false, null, true, this, this ) ) {
+            /* Setting 'cached token', 'basic user profile' and 'sdk init' listeners during initialization */
+            if( AIRFacebook.init( FACEBOOK_APP_ID, false, null, true, this, this, this ) ) {
                 /* We want to know when app is invoked from a Facebook Game Request notification */
                 AIRFacebook.addGameRequestInvokeListener( this );   // Or we could use the standard event listener wth AIRFacebookGameRequestInvokeEvent.INVOKE
-                Logger.log( "Initialized Facebook SDK " + AIRFacebook.sdkVersion );
+                Logger.log( "Initialized extension context" );
             } else {
-                Logger.log( "Failed to initialize Facebook SDK" );
+                Logger.log( "Failed to initialize extension context for AIRFacebook" );
             }
         }
 
@@ -224,6 +228,14 @@ package com.marpies.demo.facebook.screens {
          *
          *
          */
+
+        /**
+         * Facebook SDK init
+         */
+
+        public function onFacebookSDKInitialized():void {
+            Logger.log( "Facebook SDK initialized " + AIRFacebook.sdkVersion );
+        }
 
         /**
          * Cached access token
