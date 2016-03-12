@@ -22,10 +22,9 @@ This is a demo application highlighting the core features of the extension. This
 
 ### Change log
 
-#### September 16, 2015
+#### January 27, 2016
 
-* UPDATED Facebook SDK to version 4.6.0 for both iOS and Android
-* ADDED support for iOS simulator target
+* FIXED bug where Facebook SDK fails to call an app invite dialog callback when Facebook app is not installed and user closes the dialog before logging in
 
 See [full change log](http://nativeextensions.marpies.com/facebook/changelog.txt) for previous updates.
 
