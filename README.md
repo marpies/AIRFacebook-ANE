@@ -17,14 +17,14 @@ This is a demo application highlighting the core features of the extension. This
 ### Requirements
 
 * iOS 7+
-* Android 2.3.3+ (ANE v1.2.0), Android 4.0.3+ (ANE v1.3.0)
+* Android 2.3.3+ (ANE v1.2.x), Android 4.0.3+ (ANE v1.3.x)
 * Adobe AIR 18+
 
 ### Change log
 
-#### June 10, 2016
+#### July 12, 2016
 
-* UPDATED Facebook SDK to version 4.12.0 (iOS) and 4.12.1 (Android)
+* UPDATED Facebook SDK for Android to version 4.13.2
 
 See [full change log](http://nativeextensions.marpies.com/facebook/changelog.txt) for previous updates.
 
