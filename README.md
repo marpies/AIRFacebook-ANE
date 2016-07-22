@@ -22,9 +22,9 @@ This is a demo application highlighting the core features of the extension. This
 
 ### Change log
 
-#### July 12, 2016
+#### July 22, 2016
 
-* UPDATED Facebook SDK for Android to version 4.13.2
+* UPDATED Facebook SDK to v4.14.0 for both iOS and Android
 
 See [full change log](http://nativeextensions.marpies.com/facebook/changelog.txt) for previous updates.
 
