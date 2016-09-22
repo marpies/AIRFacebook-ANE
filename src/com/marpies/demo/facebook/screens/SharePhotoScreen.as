@@ -18,6 +18,7 @@ package com.marpies.demo.facebook.screens {
     import starling.display.DisplayObject;
     import starling.display.Image;
     import starling.events.Event;
+    import starling.textures.Texture;
 
     public class SharePhotoScreen extends BaseScreen implements IAIRFacebookShareListener {
 
@@ -62,7 +63,7 @@ package com.marpies.demo.facebook.screens {
 
             /* Add Starling logo image */
             mStarlingLogoBitmap = new STARLING_LOGO();
-            mStarlingLogoImage = Image.fromBitmap( mStarlingLogoBitmap, false, Constants.scaleFactor );
+            mStarlingLogoImage = new Image( Texture.fromBitmap( mStarlingLogoBitmap, false, false, Constants.scaleFactor ) );
             addChild( mStarlingLogoImage );
 
             /* Image URL */

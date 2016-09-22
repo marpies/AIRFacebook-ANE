@@ -35,6 +35,7 @@ package com.marpies.demo.facebook.screens {
     import starling.display.DisplayObject;
     import starling.display.Image;
     import starling.events.Event;
+    import starling.textures.Texture;
 
     public class LoginScreen extends BaseScreen implements
             IAIRFacebookCachedAccessTokenListener,
@@ -320,7 +321,10 @@ package com.marpies.demo.facebook.screens {
 
         public function onFacebookUserProfilePictureSuccess( picture:Bitmap ):void {
             Logger.log( "Profile picture loaded" );
-            mProfilePicture = Image.fromBitmap( picture, false, Constants.scaleFactor );
+            if( mProfilePicture != null ) {
+                mProfilePicture.removeFromParent( true );
+            }
+            mProfilePicture = new Image( Texture.fromBitmap( picture, false, false, Constants.scaleFactor ) );
             addChildAt( mProfilePicture, 0 );
         }
 
@@ -368,7 +372,7 @@ package com.marpies.demo.facebook.screens {
 
 
         /**
-         * Event handlers (just for demonstration purposes)
+         * Event handlers (just for demonstration purposes in this sample app)
          */
 
         private function onCachedAccessTokenResult( event:AIRFacebookCachedAccessTokenEvent ):void {

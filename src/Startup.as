@@ -2,6 +2,8 @@ package {
 
     import com.marpies.utils.Constants;
 
+    import feathers.utils.ScreenDensityScaleFactorManager;
+
     import flash.desktop.NativeApplication;
     import flash.display.Sprite;
     import flash.display.StageAlign;
@@ -9,33 +11,23 @@ package {
     import flash.display.StageScaleMode;
     import flash.display3D.Context3DProfile;
     import flash.events.Event;
-    import flash.geom.Rectangle;
     import flash.system.Capabilities;
     import flash.utils.clearInterval;
     import flash.utils.setTimeout;
 
     import starling.core.Starling;
     import starling.events.Event;
-    import starling.utils.HAlign;
-    import starling.utils.RectangleUtil;
-    import starling.utils.ScaleMode;
-    import starling.utils.VAlign;
 
     [SWF(frameRate="60", backgroundColor="#1E2038")]
     public class Startup extends Sprite {
 
         private var mStarling:Starling;
 
-        private var mBaseRect:Rectangle;
-        private var mScreenRect:Rectangle;
-        private var mViewport:Rectangle;
-        private var mViewportBaseRatioWidth:Number;
-        private var mViewportBaseRatioHeight:Number;
-
         private var mAssetsScale:Number;
         private var mHandleLostContext:Boolean;
 
         private var mTimeoutId:int = -1;
+        private var mScreenDensityManager:ScreenDensityScaleFactorManager;
 
         public function Startup() {
             stage.align = StageAlign.TOP_LEFT;
@@ -66,18 +58,16 @@ package {
             var iOS:Boolean = (Capabilities.manufacturer.indexOf( "Mac" ) != -1) || (Capabilities.manufacturer.indexOf( "iOS" ) != -1);
             mHandleLostContext = !iOS;
 
-            setStageAndViewPort();
-
             initStarling();
         }
 
         private function initStarling():void {
             /* Initialize and start the Starling instance */
-            Starling.handleLostContext = mHandleLostContext;
-            mStarling = new Starling( Main, stage, mViewport, null, "auto", Context3DProfile.BASELINE );
-            mStarling.stage.stageWidth = mScreenRect.width / mViewportBaseRatioWidth;
-            mStarling.stage.stageHeight = mScreenRect.height / mViewportBaseRatioHeight;
+            mStarling = new Starling( Main, stage, null, null, "auto", Context3DProfile.BASELINE );
+            mStarling.skipUnchangedFrames = true;
             mStarling.addEventListener( starling.events.Event.ROOT_CREATED, onStarlingReady );
+
+            mScreenDensityManager = new ScreenDensityScaleFactorManager( mStarling );
 
             /* Handle application Activation & Deactivation */
             NativeApplication.nativeApplication.addEventListener( flash.events.Event.ACTIVATE, onActivate );
@@ -101,28 +91,6 @@ package {
 
             /* Start Main */
             root.start();
-        }
-
-        /**
-         *
-         *
-         * Helpers
-         *
-         *
-         */
-
-        private function setStageAndViewPort():void {
-            mBaseRect = new Rectangle( 0, 0, Constants.IPAD_WIDTH, Constants.IPAD_HEIGHT );
-            mScreenRect = new Rectangle( 0, 0, stage.stageWidth, stage.stageHeight );
-            mViewport = RectangleUtil.fit( mBaseRect, mScreenRect, ScaleMode.SHOW_ALL );
-            mViewportBaseRatioWidth = mViewport.width / mBaseRect.width;
-            mViewportBaseRatioHeight = mViewport.height / mBaseRect.height;
-            mViewport.copyFrom( mScreenRect );
-            mViewport.x = 0;
-            mViewport.y = 0;
-
-            /* Set assets scale based on the iPad non-retina size */
-            mAssetsScale = mScreenRect.width / 1024;
         }
 
         /**
