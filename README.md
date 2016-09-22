@@ -38,7 +38,7 @@ For instructions on how to set up your app with the ANE and code snippets on usi
 
 ### Running the demo application
 
-After going through the guide [Setting up with AIR app](http://marpies.com/2015/09/setup-adobe-air-with-facebook/), enter your Facebook app ID in the [LoginScreen](src/com/marpies/demo/facebook/screens/LoginScreen.as#L61) class. Add [Starling](http://gamua.com/starling/) and [Feathers](http://feathersui.com) libraries to your project, set [Startup class](https://github.com/marpies/AIRFacebook-ANE/blob/master/src/Startup.as) as your main/document class, compile and run as usually.
+After going through the guide [Setting up with AIR app](http://marpies.com/2015/09/setup-adobe-air-with-facebook/), enter your Facebook app ID in the [LoginScreen](src/com/marpies/demo/facebook/screens/LoginScreen.as#L65) class. Add [Starling](http://gamua.com/starling/) and [Feathers](http://feathersui.com) libraries to your project (compiled SWCs are available in [assets/libs directory](assets/libs). Finally, set [Startup class](https://github.com/marpies/AIRFacebook-ANE/blob/master/src/Startup.as) as your main/document class, compile and run as usually.
 
 ### API reference
 
