@@ -1,0 +1,36 @@
+<platform xmlns="http://ns.adobe.com/air/extension/20.0">
+
+    <packagedDependencies>
+        <packagedDependency>android-arch-1.0.0.jar</packagedDependency>
+        <packagedDependency>android-arch-1.0.3.jar</packagedDependency>
+        <packagedDependency>bolts-applinks-1.4.0.jar</packagedDependency>
+        <packagedDependency>bolts-tasks-1.4.0.jar</packagedDependency>
+        <packagedDependency>facebook-applinks-4.30.0.jar</packagedDependency>
+        <packagedDependency>facebook-common-4.30.0.jar</packagedDependency>
+        <packagedDependency>facebook-core-4.30.0.jar</packagedDependency>
+        <packagedDependency>facebook-login-4.30.0.jar</packagedDependency>
+        <packagedDependency>facebook-messenger-4.30.0.jar</packagedDependency>
+        <packagedDependency>facebook-share-4.30.0.jar</packagedDependency>
+        <packagedDependency>google-zxing-3.3.0.jar</packagedDependency>
+    </packagedDependencies> 
+
+    <packagedResources>
+        <packagedResource> 
+            <packageName>com.facebook.common</packageName> 
+            <folderName>com.marpies.ane.facebook-common-res</folderName> 
+        </packagedResource>
+        <packagedResource> 
+            <packageName>com.facebook.login</packageName> 
+            <folderName>com.marpies.ane.facebook-login-res</folderName> 
+        </packagedResource>
+        <packagedResource> 
+            <packageName>com.facebook.messenger</packageName> 
+            <folderName>com.marpies.ane.facebook-messenger-res</folderName> 
+        </packagedResource>
+        <packagedResource> 
+            <packageName>com.facebook.share</packageName> 
+            <folderName>com.marpies.ane.facebook-share-res</folderName> 
+        </packagedResource>
+    </packagedResources>
+
+</platform>

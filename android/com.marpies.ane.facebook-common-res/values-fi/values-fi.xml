@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Marcel Piestansky
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <string gender="unknown" name="com_facebook_device_auth_instructions">Siirry osoitteeseen &lt;b>facebook.com/device&lt;/b> ja anna oheinen koodi.</string>
+    <string gender="unknown" name="com_facebook_image_download_unknown_error">Kuvaa ladattaessa tapahtui yllättävä virhe.</string>
+    <string gender="unknown" name="com_facebook_internet_permission_error_message">WebView-sisäänkirjautuminen edellyttää Internet-lupaa</string>
+    <string gender="unknown" name="com_facebook_internet_permission_error_title">AndroidManifest-virhe</string>
+    <string gender="unknown" name="com_facebook_like_button_liked">Tykätty</string>
+    <string gender="unknown" name="com_facebook_like_button_not_liked">Tykkää</string>
+    <string gender="unknown" name="com_facebook_loading">Ladataan...</string>
+    <string gender="unknown" name="com_facebook_loginview_cancel_action">Peruuta</string>
+    <string gender="unknown" name="com_facebook_loginview_log_in_button">Kirjaudu sisään</string>
+    <string gender="unknown" name="com_facebook_loginview_log_in_button_continue">Jatka Facebookissa</string>
+    <string gender="unknown" name="com_facebook_loginview_log_in_button_long">Kirjaudu Facebook-tunnuksilla</string>
+    <string gender="unknown" name="com_facebook_loginview_log_out_action">Kirjaudu ulos</string>
+    <string gender="unknown" name="com_facebook_loginview_log_out_button">Kirjaudu ulos</string>
+    <string gender="unknown" name="com_facebook_loginview_logged_in_as">Kirjautunut sisään nimellä %1$s</string>
+    <string gender="unknown" name="com_facebook_loginview_logged_in_using_facebook">Kirjauduttu sisään Facebook-tunnuksilla</string>
+    <string gender="unknown" name="com_facebook_send_button_text">Lähetä</string>
+    <string gender="unknown" name="com_facebook_share_button_text">Jaa</string>
+    <string gender="unknown" name="com_facebook_smart_device_instructions">Liitä tilisi avaamalla Facebook-sovellus matkapuhelimellasi ja tarkistamalla ilmoitukset.</string>
+    <string gender="unknown" name="com_facebook_smart_device_instructions_or">- TAI -</string>
+    <string gender="unknown" name="com_facebook_smart_login_confirmation_cancel">Etkö ole tämä henkilö?</string>
+    <string gender="unknown" name="com_facebook_smart_login_confirmation_continue_as">Jatka nimellä %1$s</string>
+    <string gender="unknown" name="com_facebook_smart_login_confirmation_title">Vahvista sisäänkirjautuminen</string>
+    <string gender="unknown" name="com_facebook_tooltip_default">Sinä päätät - valitse mitkä tiedot haluat jakaa sovelluksille</string>
+</resources>

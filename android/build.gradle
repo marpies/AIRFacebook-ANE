@@ -1,0 +1,57 @@
+
+apply plugin: 'com.android.library'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.+'
+    }
+}
+
+
+repositories {
+    mavenCentral()
+    jcenter()
+    google()
+}
+
+dependencies {
+    implementation 'com.facebook.android:facebook-android-sdk:4.30.0'
+    compile files('libs/FlashRuntimeExtensions.jar')
+}
+
+
+android {
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 19
+    }
+    compileSdkVersion 27
+    buildToolsVersion "27.0.1"
+    
+    lintOptions {
+        abortOnError false
+    }
+
+    sourceSets {
+        main {
+            manifest {
+                srcFile 'AndroidManifest.xml'
+            }
+            java {
+                srcDir 'src'
+            }
+            res {
+                srcDir 'com.marpies.ane.facebook-res'
+            }
+        }
+    }
+}
+
+
+
+

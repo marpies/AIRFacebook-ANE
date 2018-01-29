@@ -1,0 +1,19 @@
+<extension xmlns="http://ns.adobe.com/air/extension/20.0">
+  <id>com.marpies.ane.facebook</id>
+  <versionNumber>2.0.0</versionNumber>
+  <platforms>
+
+    <platform name="iPhone-x86">
+        <applicationDeployment>
+            <nativeLibrary>libAIRFacebook.a</nativeLibrary>
+            <initializer>AIRFacebookInitializer</initializer>
+            <finalizer>AIRFacebookFinalizer</finalizer>
+        </applicationDeployment>
+    </platform>
+
+    <platform name="default">
+        <applicationDeployment/>
+    </platform>
+
+  </platforms>
+</extension>

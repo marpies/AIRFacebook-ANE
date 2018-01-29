@@ -1,0 +1,16 @@
+actionscript/.idea
+Main.iml
+android/.gradle
+android/.idea
+android/build
+android/gen
+project.properties
+build/temp
+demo_app
+.DS_STORE
+UserInterfaceState.xcuserstate
+android/out
+android/$buildDir
+bin
+ios/AIRFacebook.xcodeproj/xcuserdata
+docs

@@ -1,0 +1,16 @@
+<platform xmlns="http://ns.adobe.com/air/extension/20.0">
+
+    <linkerOptions>
+        <option>-ios_version_min 8.0</option>
+    </linkerOptions>
+
+    <packagedDependencies>
+        <packagedDependency>FBSDKCoreKit.framework</packagedDependency>
+        <packagedDependency>FBSDKLoginKit.framework</packagedDependency>
+        <packagedDependency>FBSDKMessengerShareKit.framework</packagedDependency>
+        <packagedDependency>FBSDKShareKit.framework</packagedDependency>
+        <packagedDependency>Bolts.framework</packagedDependency>
+        <packagedDependency>AIRExtHelpers.framework</packagedDependency>
+    </packagedDependencies>
+    
+</platform>

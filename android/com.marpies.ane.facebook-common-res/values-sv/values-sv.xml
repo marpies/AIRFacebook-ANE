@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Marcel Piestansky
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+    <string gender="unknown" name="com_facebook_device_auth_instructions">Gå till &lt;b>facebook.com/device&lt;/b> och skriv in koden som visas ovan.</string>
+    <string gender="unknown" name="com_facebook_image_download_unknown_error">Ett oväntat fel inträffade när en bild skulle laddas ned.</string>
+    <string gender="unknown" name="com_facebook_internet_permission_error_message">WebView-inloggning kräver INTERNET-åtkomst</string>
+    <string gender="unknown" name="com_facebook_internet_permission_error_title">AndroidManifest-fel</string>
+    <string gender="unknown" name="com_facebook_like_button_liked">Gillat</string>
+    <string gender="unknown" name="com_facebook_like_button_not_liked">Gilla</string>
+    <string gender="unknown" name="com_facebook_loading">Laddar ...</string>
+    <string gender="unknown" name="com_facebook_loginview_cancel_action">Avbryt</string>
+    <string gender="unknown" name="com_facebook_loginview_log_in_button">Logga in</string>
+    <string gender="unknown" name="com_facebook_loginview_log_in_button_continue">Fortsätt med Facebook</string>
+    <string gender="unknown" name="com_facebook_loginview_log_in_button_long">Logga in med Facebook</string>
+    <string gender="unknown" name="com_facebook_loginview_log_out_action">Logga ut</string>
+    <string gender="unknown" name="com_facebook_loginview_log_out_button">Logga ut</string>
+    <string gender="unknown" name="com_facebook_loginview_logged_in_as">Inloggad som: %1$s</string>
+    <string gender="unknown" name="com_facebook_loginview_logged_in_using_facebook">Inloggad med Facebook</string>
+    <string gender="unknown" name="com_facebook_send_button_text">Skicka</string>
+    <string gender="unknown" name="com_facebook_share_button_text">Dela</string>
+    <string gender="unknown" name="com_facebook_smart_device_instructions">Koppla ditt konto genom att öppna Facebook-appen på din mobila enhet och leta efter aviseringar.</string>
+    <string gender="unknown" name="com_facebook_smart_device_instructions_or">- ELLER -</string>
+    <string gender="unknown" name="com_facebook_smart_login_confirmation_cancel">Inte du?</string>
+    <string gender="unknown" name="com_facebook_smart_login_confirmation_continue_as">Fortsätt som %1$s</string>
+    <string gender="unknown" name="com_facebook_smart_login_confirmation_title">Bekräfta inloggning</string>
+    <string gender="unknown" name="com_facebook_tooltip_default">Du bestämmer – välj vilken information du vill dela med appar.</string>
+</resources>

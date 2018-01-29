@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="AIRFacebook build scripts" default="all">
+
+    <!-- Config -->
+    <property file="build.properties"/>
+
+    <!-- All -->
+    <target name="all" depends="clean,swc,swc-ios,swc-android,ios,ios-sim,android,package,package-ios-sim,package-frameworks" description="Builds and packages the ANE for all targets."/>
+
+    <target name="clean" description="Clean temp build dir">
+        <delete dir="temp"/>
+    </target>
+
+    <!--
+
+    ================================================================
+                                        iOS
+    ================================================================
+
+    -->
+    <target name="ios" description="Build iOS project for iOS devices.">
+        <antcall target="ios-build">
+            <param name="IOS_TARGET" value="iphoneos"/>
+            <param name="IOS_DIR" value="ios"/>
+        </antcall>
+    </target>
+    <target name="ios-sim" description="Build iOS project for iOS simulators.">
+        <antcall target="ios-build">
+            <param name="IOS_TARGET" value="iphonesimulator"/>
+            <param name="IOS_DIR" value="ios-sim"/>
+        </antcall>
+    </target>
+    <target name="ios-build" description="Build iOS Library">
+        <echo message="RUNNING IOS-BUILD WITH ${IOS_TARGET} and ${IOS_DIR}" />
+        <!-- make the build directory for the objc code -->
+        <mkdir dir="temp/${IOS_DIR}/build/"/>
+
+        <!-- clean the build -->
+        <exec executable="xcodebuild" failonerror="true" dir="../ios/">
+            <arg line="-project ${name}.xcodeproj"/>
+            <arg line="-alltargets clean"/>
+        </exec>
+
+        <!-- compile the ios lib -->
+        <exec executable="xcodebuild" failonerror="true" dir="../ios/">
+            <arg line="-project ${name}.xcodeproj"/>
+            <arg line="-sdk ${IOS_TARGET}"/>
+            <arg line="-alltargets"/>
+            <arg line="-configuration Release"/>
+            <arg line="SYMROOT=../build/temp/${IOS_DIR}/build/"/>
+        </exec>
+
+        <!-- copy the ios lib to the base temp ios directory -->
+        <copy file="temp/${IOS_DIR}/build/Release-${IOS_TARGET}/lib${name}.a" todir="temp/${IOS_DIR}" overwrite="true"/>
+
+        <delete dir="temp/${IOS_DIR}/FBSDKCoreKit.framework"/>
+        <delete dir="temp/${IOS_DIR}/FBSDKLoginKit.framework"/>
+        <delete dir="temp/${IOS_DIR}/FBSDKMessengerShareKit.framework"/>
+        <delete dir="temp/${IOS_DIR}/FBSDKShareKit.framework"/>
+        <delete dir="temp/${IOS_DIR}/Bolts.framework"/>
+
+        <!-- Copy over required frameworks and libs -->
+        <copy todir="temp/${IOS_DIR}/FBSDKCoreKit.framework" overwrite="true">
+            <fileset dir="../ios/Frameworks/FBSDKCoreKit.framework"/>
+        </copy>
+        <copy todir="temp/${IOS_DIR}/FBSDKLoginKit.framework" overwrite="true">
+            <fileset dir="../ios/Frameworks/FBSDKLoginKit.framework"/>
+        </copy>
+        <copy todir="temp/${IOS_DIR}/FBSDKMessengerShareKit.framework" overwrite="true">
+            <fileset dir="../ios/Frameworks/FBSDKMessengerShareKit.framework"/>
+        </copy>
+        <copy todir="temp/${IOS_DIR}/FBSDKShareKit.framework" overwrite="true">
+            <fileset dir="../ios/Frameworks/FBSDKShareKit.framework"/>
+        </copy>
+        <copy todir="temp/${IOS_DIR}/Bolts.framework" overwrite="true">
+            <fileset dir="../ios/Frameworks/Bolts.framework"/>
+        </copy>
+        <copy todir="temp/${IOS_DIR}/AIRExtHelpers.framework" overwrite="true">
+            <fileset dir="../ios/Frameworks/AIRExtHelpers.framework"/>
+        </copy>
+        <copy todir="temp/${IOS_DIR}/FacebookSDKStrings.bundle" overwrite="true">
+            <fileset dir="../ios/Frameworks/FacebookSDKStrings.bundle"/>
+        </copy>
+
+        <!-- remove the build directory -->
+        <delete dir="temp/${IOS_DIR}/build/"/>
+    </target>
+
+
+
+    <!--
+
+    ================================================================
+                                Android
+    ================================================================
+
+    -->
+    <target name="android" description="Build Android Library with debugging disabled">
+        <property name="ANDROID_TARGET" value="release"/>
+        <antcall target="android-build"/>
+    </target>
+    <target name="android-debug" description="Build Android Library with debugging enabled">
+        <property name="ANDROID_TARGET" value="debug"/>
+        <antcall target="android-build"/>
+    </target>
+    <target name="android-build" description="Build Android Library">
+        <!-- build .aar using gradle -->
+        <exec executable="${gradle.exec}" dir="../android" failonerror="true">
+            <arg value="build" />
+            <arg line="-x lint" />
+        </exec>
+
+        <!-- unzip .aar -->
+        <mkdir dir="temp/android/aar" />
+        <unzip src="../android/build/outputs/aar/android-${ANDROID_TARGET}.aar" dest="temp/android/aar" />
+        <!-- take the ANE lib.jar and dependencies -->
+        <move file="temp/android/aar/classes.jar" tofile="temp/android/lib${name}.jar" overwrite="true" />
+        <copy file="../android/libs/android-arch-1.0.0.jar" tofile="temp/android/android-arch-1.0.0.jar" overwrite="true" />
+        <copy file="../android/libs/android-arch-1.0.3.jar" tofile="temp/android/android-arch-1.0.3.jar" overwrite="true" />
+        <copy file="../android/libs/bolts-applinks-1.4.0.jar" tofile="temp/android/bolts-applinks-1.4.0.jar" overwrite="true" />
+        <copy file="../android/libs/bolts-tasks-1.4.0.jar" tofile="temp/android/bolts-tasks-1.4.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-applinks-4.30.0.jar" tofile="temp/android/facebook-applinks-4.30.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-common-4.30.0.jar" tofile="temp/android/facebook-common-4.30.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-core-4.30.0.jar" tofile="temp/android/facebook-core-4.30.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-login-4.30.0.jar" tofile="temp/android/facebook-login-4.30.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-messenger-4.30.0.jar" tofile="temp/android/facebook-messenger-4.30.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-share-4.30.0.jar" tofile="temp/android/facebook-share-4.30.0.jar" overwrite="true" />
+        <copy file="../android/libs/google-zxing-3.3.0.jar" tofile="temp/android/google-zxing-3.3.0.jar" overwrite="true" />
+        <!-- copy resources -->
+        <copy todir="temp/android/com.marpies.ane.facebook-common-res/">
+            <fileset dir="../android/com.marpies.ane.facebook-common-res/"/>
+        </copy>
+        <copy todir="temp/android/com.marpies.ane.facebook-login-res/">
+            <fileset dir="../android/com.marpies.ane.facebook-login-res/"/>
+        </copy>
+        <copy todir="temp/android/com.marpies.ane.facebook-messenger-res/">
+            <fileset dir="../android/com.marpies.ane.facebook-messenger-res/"/>
+        </copy>
+        <copy todir="temp/android/com.marpies.ane.facebook-share-res/">
+            <fileset dir="../android/com.marpies.ane.facebook-share-res/"/>
+        </copy>
+        <!-- clean up -->
+        <delete dir="temp/android/aar" />
+    </target>
+
+
+
+    <!--
+
+    ================================================================
+                            Actionscript (SWC)
+    ================================================================
+
+    -->
+    <target name="swc" description="Build SWC library">
+        <mkdir dir="temp/swc/content/"/>
+
+        <fileset dir="../actionscript" casesensitive="yes" id="classfiles">
+            <include name="default/src/**/*.as"/>
+			<include name="common/src/**/*.as" />
+        </fileset>
+
+        <pathconvert property="classlist" refid="classfiles" pathsep=" " dirsep=".">
+            <regexpmapper from=".*src.(.*)\.as" to="\1"/>
+        </pathconvert>
+
+        <exec executable="${air.sdk}/bin/compc${bin.ext}" failonerror="true">
+            <env key="AIR_SDK_HOME" value="${air.sdk}"/>
+            <arg line='-source-path ../actionscript/default/src'/>
+			<arg line='-source-path+=../actionscript/common/src' />
+            <arg line='-output temp/swc/${name}-default.swc'/>
+            <arg line='-swf-version=30'/>
+            <arg line='-external-library-path+="${air.sdk}/frameworks/libs/air/airglobal.swc"'/>
+            <arg line='-include-classes ${classlist}'/>
+        </exec>
+
+        <unzip src="temp/swc/${name}-default.swc" dest="temp/swc/content" overwrite="true"/>
+        <copy file="temp/swc/content/library.swf" todir="temp/default" overwrite="true"/>
+		<delete dir="temp/swc/content/"/>
+    </target>
+    
+    <target name="swc-ios" description="Build iOS SWC library">
+		<mkdir dir="temp/swc/content/" />
+
+		<fileset dir="../actionscript" casesensitive="yes" id="classfiles.ios">
+			<include name="ios/src/**/*.as" />
+			<include name="common/src/**/*.as" />
+		</fileset>
+
+		<pathconvert property="classlist.ios" refid="classfiles.ios" pathsep=" " dirsep=".">
+			<regexpmapper from=".*src.(.*)\.as" to="\1" />
+		</pathconvert>
+
+		<exec executable="${air.sdk}/bin/compc${bin.ext}" failonerror="true">
+			<arg line='-source-path ../actionscript/ios/src' />
+			<arg line='-source-path+=../actionscript/common/src' />
+			<arg line='-output temp/swc/${name}.swc' />
+			<arg line='-swf-version=30' />
+			<arg line='-external-library-path+="${air.sdk}/frameworks/libs/air/airglobal.swc"' />
+			<arg line='-include-classes ${classlist.ios}' />
+		</exec>
+
+		<unzip src="temp/swc/${name}.swc" dest="temp/swc/content" overwrite="true"/>
+		<copy file="temp/swc/content/library.swf" todir="temp/ios" overwrite="true"/>
+		<copy file="temp/swc/content/library.swf" todir="temp/ios-sim" overwrite="true"/>
+		<delete dir="temp/swc/content/"/>
+		<delete file="temp/swc/${name}.swc" />
+	</target>
+	
+	<target name="swc-android" description="Build Android SWC library">
+		<mkdir dir="temp/swc/content/" />
+
+		<fileset dir="../actionscript" casesensitive="yes" id="classfiles.android">
+			<include name="android/src/**/*.as" />
+			<include name="common/src/**/*.as" />
+		</fileset>
+
+		<pathconvert property="classlist.android" refid="classfiles.android" pathsep=" " dirsep=".">
+			<regexpmapper from=".*src.(.*)\.as" to="\1" />
+		</pathconvert>
+
+		<exec executable="${air.sdk}/bin/compc${bin.ext}" failonerror="true">
+			<arg line='-source-path ../actionscript/android/src' />
+			<arg line='-source-path+=../actionscript/common/src' />
+			<arg line='-output temp/swc/${name}.swc' />
+			<arg line='-swf-version=30' />
+			<arg line='-external-library-path+="${air.sdk}/frameworks/libs/air/airglobal.swc"' />
+			<arg line='-include-classes ${classlist.android}' />
+		</exec>
+
+		<unzip src="temp/swc/${name}.swc" dest="temp/swc/content" overwrite="true" />
+		<copy file="temp/swc/content/library.swf" todir="temp/android" overwrite="true"/>
+		<delete dir="temp/swc/content/" />
+		<delete file="temp/swc/${name}.swc" />
+	</target>
+
+    <!--
+
+    ================================================================
+                                Package
+    ================================================================
+
+    -->
+    <target name="package" description="Create the extension package">
+        <exec executable="${air.sdk}/bin/adt${bin.ext}" failonerror="true" dir="temp/">
+            <arg value="-package"/>
+            <arg value="-target"/>
+            <arg value="ane"/>
+            <arg value="${packageName}.ane"/>
+            <arg value="../extension.xml"/>
+            <arg line="-swc swc/${name}-default.swc"/>
+            <arg line="-platform iPhone-ARM -platformoptions ../platform-ios.xml -C ios/ ."/>
+            <arg line="-platform Android-ARM -platformoptions ../platform-android.xml -C android/ ."/>
+            <arg line="-platform Android-x86 -platformoptions ../platform-android.xml -C android/ ."/>
+            <arg line="-platform default -C default/ ."/>
+        </exec>
+
+        <move file="temp/${packageName}.ane" todir="../bin"/>
+    </target>
+
+    <target name="package-ios-sim" description="Create the extension package">
+        <exec executable="${air.sdk}/bin/adt${bin.ext}" failonerror="true" dir="temp/">
+            <arg value="-package"/>
+            <arg value="-target"/>
+            <arg value="ane"/>
+            <arg value="${packageName}-iOS-simulator.ane"/>
+            <arg value="../extension-sim.xml"/>
+            <arg line="-swc swc/${name}-default.swc"/>
+            <arg line="-platform iPhone-x86 -platformoptions ../platform-ios.xml -C ios-sim/ ."/>
+            <arg line="-platform default -C default/ ."/>
+        </exec>
+
+        <move file="temp/${packageName}-iOS-simulator.ane" todir="../bin"/>
+    </target>
+
+    <target name="package-frameworks" description="Create the extension package">
+        <!-- ZIP and delete iOS frameworks -->
+        <mkdir dir="temp/ios/ios-frameworks" />
+        <move file="temp/ios/FBSDKCoreKit.framework" todir="temp/ios/ios-frameworks" />
+        <move file="temp/ios/FBSDKLoginKit.framework" todir="temp/ios/ios-frameworks" />
+        <move file="temp/ios/FBSDKMessengerShareKit.framework" todir="temp/ios/ios-frameworks" />
+        <move file="temp/ios/FBSDKShareKit.framework" todir="temp/ios/ios-frameworks" />
+        <move file="temp/ios/Bolts.framework" todir="temp/ios/ios-frameworks" />
+        <delete file="../bin/iOS-frameworks.zip" />
+        <zip destfile="../bin/iOS-frameworks.zip" basedir="temp/ios/ios-frameworks" />
+        <!-- Move frameworks to temp so that we can package the ANE without them -->
+        <move file="temp/ios/ios-frameworks" todir="temp" />
+
+        <exec executable="${air.sdk}/bin/adt${bin.ext}" failonerror="true" dir="temp/">
+            <arg value="-package"/>
+            <arg value="-target"/>
+            <arg value="ane"/>
+            <arg value="${packageName}-no-iOS-frameworks.ane"/>
+            <arg value="../extension.xml"/>
+            <arg line="-swc swc/${name}-default.swc"/>
+            <arg line="-platform iPhone-ARM -platformoptions ../platform-ios-frameworks.xml -C ios/ ."/>
+            <arg line="-platform Android-ARM -platformoptions ../platform-android.xml -C android/ ."/>
+            <arg line="-platform Android-x86 -platformoptions ../platform-android.xml -C android/ ."/>
+            <arg line="-platform default -C default/ ."/>
+        </exec>
+
+        <!-- Move frameworks back to temp/ios -->
+        <move file="temp/ios-frameworks/FBSDKCoreKit.framework" todir="temp/ios" />
+        <move file="temp/ios-frameworks/FBSDKLoginKit.framework" todir="temp/ios" />
+        <move file="temp/ios-frameworks/FBSDKMessengerShareKit.framework" todir="temp/ios" />
+        <move file="temp/ios-frameworks/FBSDKShareKit.framework" todir="temp/ios" />
+        <move file="temp/ios-frameworks/Bolts.framework" todir="temp/ios" />
+        <delete dir="temp/ios-frameworks" />
+
+        <move file="temp/${packageName}-no-iOS-frameworks.ane" todir="../bin"/>
+    </target>
+
+
+    <!--
+
+    ================================================================
+                            HTML Documentation
+    ================================================================
+
+     -->
+    <target name="asdoc" description="generate the asdoc in readable html">
+        <exec executable="${air.sdk}/bin/asdoc${bin.ext}" failonerror="false">
+            <env key="FLEX_HOME" value="${air.sdk}"/>
+            <env key="FALCON_HOME" value="${air.sdk}"/>
+            <arg line='-define+=CONFIG::ane,true'/>
+            <arg line='-source-path ../actionscript/common/src'/>
+            <arg line='-doc-sources ../actionscript/common/src'/>
+            <arg value='-footer'/>
+            <arg value='Copyright 2015-2018 Marcel Piestansky &lt;a href=&quot;https://marpies.com&quot; target=&quot;_blank&quot;&gt;marpies.com&lt;/a&gt;'/>
+            <arg line='-main-title "AIRFacebook documentation"'/>
+            <arg line='-window-title "AIRFacebook documentation"'/>
+            <arg line='-output ../docs'/>
+            <arg line='-library-path+="${air.sdk}/frameworks/libs/air/airglobal.swc"'/>
+        </exec>
+    </target>
+
+</project>

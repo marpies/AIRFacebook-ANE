@@ -1,0 +1,34 @@
+<extension xmlns="http://ns.adobe.com/air/extension/20.0">
+  <id>com.marpies.ane.facebook</id>
+  <versionNumber>2.0.0</versionNumber>
+  <platforms>
+
+    <platform name="iPhone-ARM">
+        <applicationDeployment>
+            <nativeLibrary>libAIRFacebook.a</nativeLibrary>
+            <initializer>AIRFacebookInitializer</initializer>
+            <finalizer>AIRFacebookFinalizer</finalizer>
+        </applicationDeployment>
+    </platform>
+
+    <platform name="Android-ARM">
+        <applicationDeployment>
+            <nativeLibrary>libAIRFacebook.jar</nativeLibrary>
+            <initializer>com.marpies.ane.facebook.AIRFacebookExtension</initializer>
+            <finalizer>com.marpies.ane.facebook.AIRFacebookExtension</finalizer>
+        </applicationDeployment>
+    </platform>
+
+    <platform name="Android-x86">
+        <applicationDeployment>
+            <nativeLibrary>libAIRFacebook.jar</nativeLibrary>
+            <initializer>com.marpies.ane.facebook.AIRFacebookExtension</initializer>
+            <finalizer>com.marpies.ane.facebook.AIRFacebookExtension</finalizer>
+        </applicationDeployment>
+    </platform>
+
+    <platform name="default">
+        <applicationDeployment/>
+    </platform>
+  </platforms>
+</extension>
