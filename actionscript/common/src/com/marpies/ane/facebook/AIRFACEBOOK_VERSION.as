@@ -19,6 +19,6 @@ package com.marpies.ane.facebook {
 	/**
 	 * Version of the AIRFacebook extension.
 	 */
-	public const AIRFACEBOOK_VERSION:String = "2.0.0";
+	public const AIRFACEBOOK_VERSION:String = "2.1.0";
 
 }
