@@ -13,8 +13,8 @@ AIRFacebook offers a rich and cross-platform API to Facebook SDK for iOS and And
 
 ## Native SDK versions
 
-* iOS `v4.30.0`
-* Android `v4.30.0`
+* iOS `v4.38.0`
+* Android `v4.38.0`
 
 ## Getting started
 
@@ -31,6 +31,10 @@ When upgrading from AIRFacebook `v1.x`, see [Upgrade notes for AIRFacebook 2.0.0
 
 Follow [this guide](https://marpies.com/2018/02/setup-adobe-air-facebook-v2) to learn how to create your Facebook app id and make the necessary adjustments to your app descriptor.
 
+### iOS patch
+
+Copy the `libclang_rt.ios` file from the [ios_patch](ios_patch/) directory to `AIR_SDK/lib/aot/lib`.
+
 ### Using the extension
 
 For a quick overview of some of the API read the following guides:
@@ -44,8 +48,7 @@ For a quick overview of some of the API read the following guides:
 
 * iOS 8+
 * Android 4.0.3+
-* Adobe AIR 25+
-  * When using AIR 25-27 you need to set `-platformsdk` to iOS 11 SDK when packaging IPA. AIR 28 or newer does not require this.
+* Adobe AIR 30+
 
 ## Build ANE
 
