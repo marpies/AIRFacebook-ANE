@@ -35,12 +35,6 @@
         <!-- make the build directory for the objc code -->
         <mkdir dir="temp/${IOS_DIR}/build/"/>
 
-        <!-- clean the build -->
-        <exec executable="xcodebuild" failonerror="true" dir="../ios/">
-            <arg line="-project ${name}.xcodeproj"/>
-            <arg line="-alltargets clean"/>
-        </exec>
-
         <!-- compile the ios lib -->
         <exec executable="xcodebuild" failonerror="true" dir="../ios/">
             <arg line="-project ${name}.xcodeproj"/>
