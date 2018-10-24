@@ -1,28 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2018 Marcel Piestansky
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~ http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-
 <resources>
     <string gender="unknown" name="com_facebook_device_auth_instructions">Puntahan ang &lt;b>facebook.com/device&lt;/b> at ilagay ang code na ipinapakita sa itaas.</string>
     <string gender="unknown" name="com_facebook_image_download_unknown_error">Hindi inaasahang error habang dina-download ang larawan.</string>
     <string gender="unknown" name="com_facebook_internet_permission_error_message">Ang pag-log in sa WebView ay nangangailangan ng pahintulot sa INTERNET</string>
     <string gender="unknown" name="com_facebook_like_button_liked">Nagustuhan</string>
-    <string gender="unknown" name="com_facebook_like_button_not_liked">Gusto ko ito</string>
+    <string gender="unknown" name="com_facebook_like_button_not_liked">I-like</string>
     <string gender="unknown" name="com_facebook_loading">Naglo-load...</string>
-    <string gender="unknown" name="com_facebook_loginview_cancel_action">Kanselahin</string>
+    <string gender="unknown" name="com_facebook_loginview_cancel_action">I-cancel</string>
     <string gender="unknown" name="com_facebook_loginview_log_in_button">Mag-log in</string>
     <string gender="unknown" name="com_facebook_loginview_log_in_button_continue">Magpatuloy gamit ang Facebook</string>
     <string gender="unknown" name="com_facebook_loginview_log_in_button_long">Mag-log in sa Facebook</string>

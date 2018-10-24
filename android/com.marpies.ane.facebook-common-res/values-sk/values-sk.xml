@@ -1,20 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2018 Marcel Piestansky
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~ http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
-
 <resources>
     <string gender="unknown" name="com_facebook_device_auth_instructions">Navštívte stránku &lt;b>facebook.com/device&lt;/b> a zadajte kód zobrazený vyššie.</string>
     <string gender="unknown" name="com_facebook_image_download_unknown_error">Pri sťahovaní obrázka sa vyskytla neočakávaná chyba.</string>
@@ -38,5 +22,5 @@
     <string gender="unknown" name="com_facebook_smart_login_confirmation_cancel">Nie ste to vy?</string>
     <string gender="unknown" name="com_facebook_smart_login_confirmation_continue_as">Pokračovať ako %1$s</string>
     <string gender="unknown" name="com_facebook_smart_login_confirmation_title">Potvrdiť prihlásenie</string>
-    <string gender="unknown" name="com_facebook_tooltip_default">Máte to pod kontrolou: vy určujete, ktoré informácie chcete zdieľať s aplikáciami.</string>
+    <string gender="unknown" name="com_facebook_tooltip_default">Máte to pod kontrolou – vyberte, ktoré informácie chcete zdieľať s aplikáciami.</string>
 </resources>

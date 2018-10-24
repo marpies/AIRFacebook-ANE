@@ -14,13 +14,18 @@ buildscript {
 
 
 repositories {
+    google()
     mavenCentral()
     jcenter()
-    google()
 }
 
 dependencies {
-    implementation 'com.facebook.android:facebook-android-sdk:4.30.0'
+    implementation 'com.facebook.android:facebook-core:[4,5)'
+    implementation 'com.facebook.android:facebook-login:[4,5)'
+    implementation 'com.facebook.android:facebook-share:[4,5)'
+    implementation 'com.facebook.android:facebook-places:[4,5)'
+    implementation 'com.facebook.android:facebook-messenger:[4,5)'
+    implementation 'com.facebook.android:facebook-applinks:[4,5)'
     compile files('libs/FlashRuntimeExtensions.jar')
 }
 
@@ -30,8 +35,8 @@ android {
         minSdkVersion 15
         targetSdkVersion 19
     }
-    compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
     
     lintOptions {
         abortOnError false

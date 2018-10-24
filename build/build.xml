@@ -115,16 +115,14 @@
         <unzip src="../android/build/outputs/aar/android-${ANDROID_TARGET}.aar" dest="temp/android/aar" />
         <!-- take the ANE lib.jar and dependencies -->
         <move file="temp/android/aar/classes.jar" tofile="temp/android/lib${name}.jar" overwrite="true" />
-        <copy file="../android/libs/android-arch-1.0.0.jar" tofile="temp/android/android-arch-1.0.0.jar" overwrite="true" />
-        <copy file="../android/libs/android-arch-1.0.3.jar" tofile="temp/android/android-arch-1.0.3.jar" overwrite="true" />
         <copy file="../android/libs/bolts-applinks-1.4.0.jar" tofile="temp/android/bolts-applinks-1.4.0.jar" overwrite="true" />
         <copy file="../android/libs/bolts-tasks-1.4.0.jar" tofile="temp/android/bolts-tasks-1.4.0.jar" overwrite="true" />
-        <copy file="../android/libs/facebook-applinks-4.30.0.jar" tofile="temp/android/facebook-applinks-4.30.0.jar" overwrite="true" />
-        <copy file="../android/libs/facebook-common-4.30.0.jar" tofile="temp/android/facebook-common-4.30.0.jar" overwrite="true" />
-        <copy file="../android/libs/facebook-core-4.30.0.jar" tofile="temp/android/facebook-core-4.30.0.jar" overwrite="true" />
-        <copy file="../android/libs/facebook-login-4.30.0.jar" tofile="temp/android/facebook-login-4.30.0.jar" overwrite="true" />
-        <copy file="../android/libs/facebook-messenger-4.30.0.jar" tofile="temp/android/facebook-messenger-4.30.0.jar" overwrite="true" />
-        <copy file="../android/libs/facebook-share-4.30.0.jar" tofile="temp/android/facebook-share-4.30.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-applinks-4.38.0.jar" tofile="temp/android/facebook-applinks-4.38.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-common-4.38.0.jar" tofile="temp/android/facebook-common-4.38.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-core-4.38.0.jar" tofile="temp/android/facebook-core-4.38.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-login-4.38.0.jar" tofile="temp/android/facebook-login-4.38.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-messenger-4.38.0.jar" tofile="temp/android/facebook-messenger-4.38.0.jar" overwrite="true" />
+        <copy file="../android/libs/facebook-share-4.38.0.jar" tofile="temp/android/facebook-share-4.38.0.jar" overwrite="true" />
         <copy file="../android/libs/google-zxing-3.3.0.jar" tofile="temp/android/google-zxing-3.3.0.jar" overwrite="true" />
         <!-- copy resources -->
         <copy todir="temp/android/com.marpies.ane.facebook-common-res/">
